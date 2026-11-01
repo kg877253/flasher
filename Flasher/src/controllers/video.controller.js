@@ -111,7 +111,13 @@ const getVideoById = asyncHandler(async (req, res) => {
         throw new ApiError(404, "Video not found")
     }
 
-    video.views += 1
+    // view count increment karna hai pr sirf ek user ke liye ek hi baar increment hoga
+    const userId = req.user._id.toString()
+    
+    if (!video.viewedBy.includes(userId)) {
+        video.viewedBy.push(userId)
+        video.views += 1
+    }
     await video.save()
 
     const populatedVideo = await video.populate("owner", "username avatar fullname")
