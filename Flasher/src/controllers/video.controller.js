@@ -52,7 +52,6 @@ const publishAVideo = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Title and description are required")
     }
 
-    // TODO: get video, upload to cloudinary, create video
     //Steps :
     //1. Get the video file and thumbnail from req.files
     //2. Upload the video file and thumbnail to cloudinary using uploadToCloudinary function
