@@ -35,7 +35,7 @@ const getAllVideos = asyncHandler(async (req, res) => {
         filter.owner = userId;
     }
 
-    const allvideos = await Video.find(filter).populate("owner", " username avatar fullname")
+    const allvideos = await Video.find(filter).populate("owner", " username avatar fullname").select("-viewedBy")
     const total = await Video.countDocuments(filter)
 
     if (!allvideos.length) {
@@ -99,7 +99,7 @@ const getVideoById = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Invalid videoId")
     }
 
-    const video = await Video.findById(videoId)
+    const video = await Video.findById(videoId).select("-viewedBy")
 
     // pehle check karo video mili ya nahi
     if (!video) {
@@ -121,7 +121,6 @@ const getVideoById = asyncHandler(async (req, res) => {
     if (viewResult.modifiedCount > 0) {
         video.views += 1
     }
-    await video.save()
 
     const populatedVideo = await video.populate("owner", "username avatar fullname")
 
