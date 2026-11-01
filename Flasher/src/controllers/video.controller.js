@@ -64,7 +64,7 @@ const publishAVideo = asyncHandler(async (req, res) => {
     if (!videofile || !thumbnail) {
         throw new ApiError(400, "Video file and thumbnail are required")
     }
-    
+
     if (!videofile.size || !thumbnail.size) {
         throw new ApiError(400, "Uploaded file is empty");
     }
@@ -111,11 +111,14 @@ const getVideoById = asyncHandler(async (req, res) => {
         throw new ApiError(404, "Video not found")
     }
 
-    // view count increment karna hai pr sirf ek user ke liye ek hi baar increment hoga
-    const userId = req.user._id.toString()
-    
-    if (!video.viewedBy.includes(userId)) {
-        video.viewedBy.push(userId)
+    // unique view: sirf tab +1 jab ye user pehli baar dekh raha ho (ek hi atomic query)
+    const viewResult = await Video.updateOne(
+        { _id: videoId, viewedBy: { $ne: req.user._id } },
+        { $addToSet: { viewedBy: req.user._id }, $inc: { views: 1 } }
+    )
+
+    // response me sahi count dikhane ke liye (save nahi karna)
+    if (viewResult.modifiedCount > 0) {
         video.views += 1
     }
     await video.save()
