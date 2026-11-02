@@ -20,7 +20,7 @@ router.get("/user/:userId", getUserPlaylists); //T-Done
 router.get("/:playlistId", getPlaylistById) //T-Done
 
 router.patch("/add/:videoId/:playlistId", addVideoToPlaylist);//T-Done
-router.patch("/remove/:videoId/:playlistI   d", removeVideoFromPlaylist);//T-Done
+router.patch("/remove/:videoId/:playlistId", removeVideoFromPlaylist);//T-Done
 router.patch("/:playlistId", updatePlaylist)//T-Done
 
 router.delete("/:playlistId", deletePlaylist) //T-Done
