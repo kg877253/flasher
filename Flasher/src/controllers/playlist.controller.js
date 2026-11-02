@@ -1,5 +1,6 @@
 import { isValidObjectId } from "mongoose"
 import { Playlist } from "../models/playlist.model.js"
+import { Video } from "../models/video.model.js"
 import { ApiError } from "../utils/ApiError.js"
 import { ApiResponse } from "../utils/ApiResponse.js"
 import { asyncHandler } from "../utils/asyncHandler.js"
@@ -7,7 +8,6 @@ import { asyncHandler } from "../utils/asyncHandler.js"
 
 const createPlaylist = asyncHandler(async (req, res) => {
     const { name, description } = req.body
-    //TODO: create playlist
 
     if (!name) {
         throw new ApiError(400, "Name of the playlist is required")
@@ -31,13 +31,13 @@ const createPlaylist = asyncHandler(async (req, res) => {
 
 const getUserPlaylists = asyncHandler(async (req, res) => {
     const { userId } = req.params
-    //TODO: get user playlists
+
     if (!isValidObjectId(userId)) {
         throw new ApiError(400, "Invalid user ID")
     }
 
     const playlists = await Playlist.find({ owner: userId })
-    if (!playlists) {
+    if (playlists.length === 0) {
         throw new ApiError(404, "No playlists found for the user")
     }
 
@@ -48,28 +48,13 @@ const getUserPlaylists = asyncHandler(async (req, res) => {
 
 const getPlaylistById = asyncHandler(async (req, res) => {
     const { playlistId } = req.params
-    //TODO: get playlist by id
+
+
     if( !isValidObjectId(playlistId)) {
         throw new ApiError(400, "Invalid playlist ID")
     }
 
-    const playlist = await Playlist.findById(playlistId).aggregate([
-        {
-            $lookup: {
-                from: "videos",
-                localField: "videos",
-                foreignField: "_id",
-                as: "videoDetails"
-            }
-        },
-        {
-            $project: {
-                name: 1,
-                description: 1,
-                videoDetails: 1
-            }
-        }
-    ])
+    const playlist = await Playlist.findById(playlistId).populate("videos").populate("owner", "username email")
 
     if (!playlist) {
         throw new ApiError(404, "Playlist not found")
@@ -111,7 +96,6 @@ const addVideoToPlaylist = asyncHandler(async (req, res) => {
 
 const removeVideoFromPlaylist = asyncHandler(async (req, res) => {
     const { playlistId, videoId } = req.params
-    // TODO: remove video from playlist
 
     if (!isValidObjectId(playlistId) || !isValidObjectId(videoId)) {
         throw new ApiError(400, "Invalid playlist ID or video ID")
@@ -137,7 +121,7 @@ const removeVideoFromPlaylist = asyncHandler(async (req, res) => {
 
 const deletePlaylist = asyncHandler(async (req, res) => {
     const { playlistId } = req.params
-    // TODO: delete playlist
+
     if (!isValidObjectId(playlistId)) {
         throw new ApiError(400, "Invalid playlist ID")
     }
@@ -146,6 +130,7 @@ const deletePlaylist = asyncHandler(async (req, res) => {
     if (!playlist) {
         throw new ApiError(404, "Playlist not found")
     }
+    
     return res
         .status(200)
         .json(new ApiResponse(200, playlist, "Playlist deleted successfully"))
@@ -154,8 +139,7 @@ const deletePlaylist = asyncHandler(async (req, res) => {
 const updatePlaylist = asyncHandler(async (req, res) => {
     const { playlistId } = req.params
     const { name, description } = req.body
-    //TODO: update playlist
-
+    
     if (!isValidObjectId(playlistId)) {
         throw new ApiError(400, "Invalid playlist ID")
     }
