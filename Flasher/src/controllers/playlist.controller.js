@@ -50,7 +50,7 @@ const getPlaylistById = asyncHandler(async (req, res) => {
     const { playlistId } = req.params
 
 
-    if( !isValidObjectId(playlistId)) {
+    if (!isValidObjectId(playlistId)) {
         throw new ApiError(400, "Invalid playlist ID")
     }
 
@@ -130,7 +130,7 @@ const deletePlaylist = asyncHandler(async (req, res) => {
     if (!playlist) {
         throw new ApiError(404, "Playlist not found")
     }
-    
+
     return res
         .status(200)
         .json(new ApiResponse(200, playlist, "Playlist deleted successfully"))
@@ -139,7 +139,7 @@ const deletePlaylist = asyncHandler(async (req, res) => {
 const updatePlaylist = asyncHandler(async (req, res) => {
     const { playlistId } = req.params
     const { name, description } = req.body
-    
+
     if (!isValidObjectId(playlistId)) {
         throw new ApiError(400, "Invalid playlist ID")
     }
@@ -150,7 +150,7 @@ const updatePlaylist = asyncHandler(async (req, res) => {
     const playlist = await Playlist.findByIdAndUpdate(
         playlistId,
         { name, description },
-        {returnDocument: "after"}
+        { returnDocument: "after" }
     )
 
     if (!playlist) {
