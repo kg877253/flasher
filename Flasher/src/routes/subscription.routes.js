@@ -9,9 +9,9 @@ import { verifyJWT } from "../middlewares/auth.middleware.js"
 const router = Router();
 router.use(verifyJWT); // Apply verifyJWT middleware to all routes in this file
 
-router.post("/c/:channelId", toggleSubscription);
-router.get("/u/:subscriberId", getSubscribedChannels);
+router.post("/c/:channelId", toggleSubscription); //T-Done
+router.get("/u/:subscriberId", getSubscribedChannels); //T-Done
 
-router.route("/c/:channelId").get(getUserChannelSubscribers);
+router.route("/c/:channelId").get(getUserChannelSubscribers); //T-Done
 
 export default router

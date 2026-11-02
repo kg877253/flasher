@@ -14,7 +14,7 @@ const router = Router();
 router.use(verifyJWT); // Apply verifyJWT middleware to all routes in this file
 
 //ALL TESTED AND WORKING
-router.get("/", getAllVideos);
+router.get("/", getAllVideos); //T-Done
 router.post("/", upload.fields([
     {
         name: "videoFile",
@@ -24,19 +24,12 @@ router.post("/", upload.fields([
         name: "thumbnail",
         maxCount: 1,
     },
-]), publishAVideo);
+]), publishAVideo); //T-Done
 
-// router
-//     .route("/:videoId")
-//     .get(getVideoById)
-//     .delete(deleteVideo)
-//     .patch(upload.single("thumbnail"), updateVideo);
+router.get("/:videoId", getVideoById); //T-Done
+router.delete("/:videoId", deleteVideo); //T-Done 
+router.patch("/:videoId", upload.single("thumbnail"), updateVideo); //T-Done 
 
-router.get("/:videoId", getVideoById);
-router.delete("/:videoId", deleteVideo);
-router.patch("/:videoId", upload.single("thumbnail"), updateVideo);
-
-// router.route("/toggle/publish/:videoId").patch(togglePublishStatus);
-router.patch("/toggle/publish/:videoId", togglePublishStatus);
+router.patch("/toggle/publish/:videoId", togglePublishStatus); //T-Done
 
 export default router

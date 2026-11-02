@@ -41,7 +41,7 @@ router.get('/channel/:username', verifyJWT, getUserChannelProfile); //T-Done (us
 router.get('/watch-history', verifyJWT, getWatchHistory); //T-Done 
 
 router.patch('/update-account-details', verifyJWT, updateaccountdetails); //T-Done
-router.patch('/update-avatar', verifyJWT, upload.single('avatar'), updateuseravatar);
-router.patch('/update-cover-image', verifyJWT, upload.single('coverImage'), updateusercoverimage);
+router.patch('/update-avatar', verifyJWT, upload.single('avatar'), updateuseravatar); //T-Done
+router.patch('/update-cover-image', verifyJWT, upload.single('coverImage'), updateusercoverimage); //T-Done
 
 export default router;
