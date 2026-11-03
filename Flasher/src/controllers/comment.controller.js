@@ -144,9 +144,8 @@ const deleteComment = asyncHandler(async (req, res) => {
         throw new ApiError(403, "You are not authorized to delete this comment")
     }
 
-    Like.deleteMany({ comment: commentId }).exec()
+    await Like.deleteMany({ comment: commentId })
     await Comment.findByIdAndDelete(commentId)
-
     return res
         .status(200)
         .json(new ApiResponse(200, null, "Comment deleted successfully"))

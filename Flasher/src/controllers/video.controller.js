@@ -2,8 +2,8 @@ import mongoose, { isValidObjectId } from "mongoose"
 import { Video } from "../models/video.model.js"
 import { User } from "../models/user.model.js"
 import { Comment } from "../models/comment.model.js"
-import {Like} from "../models/like.model.js"
-import {Playlist} from "../models/playlist.model.js"
+import { Like } from "../models/like.model.js"
+import { Playlist } from "../models/playlist.model.js"
 import { ApiError } from "../utils/ApiError.js"
 import { ApiResponse } from "../utils/ApiResponse.js"
 import { asyncHandler } from "../utils/asyncHandler.js"
@@ -212,14 +212,16 @@ const deleteVideo = asyncHandler(async (req, res) => {
     await deleteFromCloudinary(oldThumbnail, "image")
     await deleteFromCloudinary(oldVideoFile, "video")
 
-    //TODO: delete likes, comments, watch history, etc. related to this video
-    Comment.deleteMany({ video: videoId }).exec()
-    Like.deleteMany({ video: videoId }).exec()
-    Playlist.updateMany(
-        { videos: videoId },
-        { $pull: { videos: videoId } }
-    ).exec()
+    // Video aur uske related data ki safai (await zaroori hai)
+    const commentIds = await Comment.distinct("_id", { video: videoId })
 
+    await Promise.all([
+        // video ke likes + us video ke comments ke likes
+        Like.deleteMany({ $or: [{ video: videoId }, { comment: { $in: commentIds } }] }),
+        Comment.deleteMany({ video: videoId }),
+        Playlist.updateMany({ videos: videoId }, { $pull: { videos: videoId } })
+    ])
+    
     return res
         .status(200)
         .json(new ApiResponse(200, {}, "Video deleted successfully"))
