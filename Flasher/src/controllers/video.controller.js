@@ -11,43 +11,67 @@ import { uploadToCloudinary, deleteFromCloudinary } from "../utils/cloudinary.js
 
 
 const getAllVideos = asyncHandler(async (req, res) => {
-    const { page = 1, limit = 10, query, sortBy, sortType, userId } = req.query
 
     //Motive:  get all videos based on query, sort, pagination 
 
     //1. Sabse pehle published videos ko filter karna hai true or not
     //2. agar query hai to title aur description me search karna hai
     //3. agar userId hai to us user ke videos ko filter karna hai
-    //4.TODO: sortBy aur sortType ke basis pe sort karna hai
-    //5. TODO: pagination ke basis pe limit aur skip karna hai
+    //4. sortBy aur sortType ke basis pe sort karna hai
+    //5. pagination ke basis pe limit aur skip karna hai
+
+    const { page = 1, limit = 10, query, sortBy, sortType, userId } = req.query
 
     const filter = { isPublished: true }
 
+    // 1. Search (regex escape ke saath)
     if (query?.trim()) {
-        filter.$or = [ //match either title or description with the query
-            //regex- searching for a matching text pattern(i-case insensitive(React=react))
-            { title: { $regex: query, $options: "i" } },
-            { description: { $regex: query, $options: "i" } }
+        const safeQuery = query.trim().replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+        filter.$or = [
+            { title: { $regex: safeQuery, $options: "i" } },
+            { description: { $regex: safeQuery, $options: "i" } }
         ]
     }
 
+    // 2. Kisi ek user ki videos
     if (userId) {
         if (!isValidObjectId(userId)) {
             throw new ApiError(400, "Invalid userId")
         }
-        filter.owner = userId;
+        filter.owner = userId
     }
 
-    const allvideos = await Video.find(filter).populate("owner", " username avatar fullname").select("-viewedBy")
+    // 3. Pagination: page kam se kam 1, limit 1 se 50 ke beech
+    const pageNum = Math.max(parseInt(page) || 1, 1)
+    const limitNum = Math.min(Math.max(parseInt(limit) || 10, 1), 50)
+
+    // 4. Sort: sirf allowed fields, default newest first
+    const allowedSortFields = ["createdAt", "views", "duration"]
+    const sortField = allowedSortFields.includes(sortBy) ? sortBy : "createdAt"
+    const sortOrder = sortType === "asc" ? 1 : -1
+
+    const allvideos = await Video.find(filter)
+        .populate("owner", "username avatar fullname")
+        .select("-viewedBy")
+        .sort({ [sortField]: sortOrder, _id: sortOrder })
+        .skip((pageNum - 1) * limitNum)
+        .limit(limitNum)
+
     const total = await Video.countDocuments(filter)
+    const totalPages = Math.ceil(total / limitNum)
 
-    if (allvideos.length===0) {
-        return res.status(404).json(new ApiResponse(200, [], "No videos found"))
-    }
-
-    return res.status(200).json(new ApiResponse(200, { allvideos, total }, "Videos fetched successfully"))
+    // 5. Khaali list pe bhi 200
+    return res.status(200).json(new ApiResponse(200, {
+        allvideos,
+        total,
+        page: pageNum,
+        limit: limitNum,
+        totalPages,
+        hasNextPage: pageNum < totalPages
+    }, "Videos fetched successfully"))
 
 })
+
 
 const publishAVideo = asyncHandler(async (req, res) => {
     const { title, description } = req.body
