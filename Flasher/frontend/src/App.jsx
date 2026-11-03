@@ -2,6 +2,8 @@ import { useState } from 'react'
 import heroImg from './assets/hero.png'
 import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
+import { Home, ShieldCheck, Bell , ArrowDown, ArrowDown2 } from 'reicon-react';
+
 function App() {
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center">
