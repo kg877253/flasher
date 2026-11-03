@@ -41,8 +41,8 @@ const getAllVideos = asyncHandler(async (req, res) => {
     const allvideos = await Video.find(filter).populate("owner", " username avatar fullname").select("-viewedBy")
     const total = await Video.countDocuments(filter)
 
-    if (!allvideos.length) {
-        return res.status(404).json(new ApiResponse(404, null, "No videos found"))
+    if (allvideos.length===0) {
+        return res.status(404).json(new ApiResponse(200, [], "No videos found"))
     }
 
     return res.status(200).json(new ApiResponse(200, { allvideos, total }, "Videos fetched successfully"))
@@ -221,7 +221,7 @@ const deleteVideo = asyncHandler(async (req, res) => {
         Comment.deleteMany({ video: videoId }),
         Playlist.updateMany({ videos: videoId }, { $pull: { videos: videoId } })
     ])
-    
+
     return res
         .status(200)
         .json(new ApiResponse(200, {}, "Video deleted successfully"))
