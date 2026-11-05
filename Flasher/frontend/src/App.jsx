@@ -1,24 +1,20 @@
-import { useState } from 'react'
-import viteLogo from './assets/vite.svg'
-import {ShieldCheck, Bell , ArrowDown, ArrowDown2 } from 'reicon-react';
-import { BrowserRouter as Router, Routes, Route, createBrowserRouter, RouterProvider } from "react-router-dom";
-import Home from "./components/Home"
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import MainLayout from "./layouts/Mainlayout";
+import Home from "./pages/Home";
+import NotFound from "./pages/NotFound";
 
-function App() {
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <MainLayout />,
+    children: [
+      { index: true, element: <Home /> },
+      // baad me: login, register, watch/:id, channel/:username
+      { path: "*", element: <NotFound /> },
+    ],
+  },
+]);
 
-  const router = createBrowserRouter([
-    {
-      path : "/",
-      element : <Home />
-    },
-    {
-      path : "/home",
-      element : <Home />
-    }
-  ])
-  return (
-    <RouterProvider router={router} />
-    )
+export default function App() {
+  return <RouterProvider router={router} />;
 }
-
-export default App
