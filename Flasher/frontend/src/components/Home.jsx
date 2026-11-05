@@ -28,7 +28,13 @@ const Home = () => {
 
           <div className="line w-1 bg-gray-400"></div>
 
-          <div className="videstab w-[80%] h-[89vh] text-white p-4"></div>
+          <div className="videstab w-[80%] h-[89vh] text-white p-4 justify-around flex flex-col items-center">
+            <div className='w-[40%] h-32 flex flex-col justify-center items-center gap-2 border border-gray-400 rounded-md'>
+              <h1 className="text-3xl font-bold text-center">No Videos available</h1>
+
+              <p className='w-[80%] text-center text-sm'>There are no videos here available. Please try to search some thing else.</p>
+            </div>
+          </div>
         </div>
       </div>
     </>
