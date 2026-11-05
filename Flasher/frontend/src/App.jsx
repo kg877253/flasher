@@ -1,15 +1,24 @@
 import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
-import { Home, ShieldCheck, Bell , ArrowDown, ArrowDown2 } from 'reicon-react';
+import {ShieldCheck, Bell , ArrowDown, ArrowDown2 } from 'reicon-react';
+import { BrowserRouter as Router, Routes, Route, createBrowserRouter, RouterProvider } from "react-router-dom";
+import Home from "./components/Home"
 
 function App() {
+
+  const router = createBrowserRouter([
+    {
+      path : "/",
+      element : <Home />
+    },
+    {
+      path : "/home",
+      element : <Home />
+    }
+  ])
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-      <h1 className="text-3xl font-bold text-blue-600">Flasher </h1>
-    </div>
-  )
+    <RouterProvider router={router} />
+    )
 }
 
 export default App
