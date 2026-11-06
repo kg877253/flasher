@@ -5,14 +5,16 @@ import { getVideoById } from "../api/video.api";
 export default function Video() {
   const { id } = useParams();
   const [video, setVideo] = useState(null);
+  const [thumbnail, setThumbnail] = useState(null);
 
   useEffect(() => {
     // fetch video by id
     const fetchVideo = async () => {
       try {
         const res = await getVideoById(id);
-        setVideo(res.data.data.videoFile);
-        console.log("video data", res.data.data.videoFile);
+        setVideo(res.videoFile);
+        setThumbnail(res.thumbnail);
+        console.log("video data", res);
       } catch (error) {
         console.error("Error fetching video:", error);
       }

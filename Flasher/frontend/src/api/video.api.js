@@ -8,5 +8,5 @@ export const getAllVideos = async (params) => {
 export const getVideoById = async (id) => {
   const res = await api.get(`/videos/${id}`);
 
-  return res; 
+  return res.data.data; // { videoFile, title, description, ... }
 }
