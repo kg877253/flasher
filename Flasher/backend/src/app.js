@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import { cleanupTempFiles } from './middlewares/cleanupTemp.middleware.js';
+import { errorHandler } from './middlewares/error.middleware.js';
 
 const app = express();
 
@@ -42,5 +43,7 @@ app.use("/api/v1/playlists", playlistRouter)
 app.use("/api/v1/dashboard", dashboardRouter)
 //http://localhost:3000/api/v1/users/register ---> is the endpoint for this route
 
+
+app.use(errorHandler); // ye middleware sabse last aayega, taki error handle ho jaye
 
 export default app;

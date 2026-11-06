@@ -1,7 +1,6 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import api from "../api/axios";
-import { useNavigate } from "react-router-dom";
 
 export default function SignUp() {
   const navigate = useNavigate();
@@ -11,37 +10,35 @@ export default function SignUp() {
     email: "",
     password: "",
   });
-  const [error, setError] = useState(null);
   const [avatar, setAvatar] = useState(null);
   const [coverImage, setCoverImage] = useState(null);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!avatar) return alert("Avatar is required");
+    if (loading) return;
+    if (!avatar) return setError("Avatar is required");
+
+    setLoading(true);
+    setError(null);
 
     const data = new FormData();
     Object.entries(form).forEach(([key, value]) => data.append(key, value));
     data.append("avatar", avatar);
     if (coverImage) data.append("coverImage", coverImage);
 
-
     try {
-
-      const res = await api.post("/users/register", data, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-
-      if (res.status === 201) {
-        navigate("/login");
-      }
+      await api.post("/users/register", data);
+      navigate("/login");
+    } catch (err) {
+      setError(err.response?.data?.message || "Something went wrong");
+    } finally {
+      setLoading(false);
     }
-    catch (err) {
-      setError(err.response?.data?.message || "An error occurred");
-    }
-    console.log(res);
   };
 
   const inputClass =
@@ -74,16 +71,22 @@ export default function SignUp() {
         <input type="file" accept="image/*"
           onChange={(e) => setCoverImage(e.target.files[0])} className={fileClass} />
 
-        <button className="rounded-md bg-purple-500 py-2 font-semibold hover:bg-purple-600 cursor-pointer">
-          Sign Up
+        <button
+          type="submit"
+          disabled={loading}
+          className="rounded-md bg-purple-500 py-2 font-semibold hover:bg-purple-600 disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          {loading ? "Creating account..." : "Sign Up"}
         </button>
+
+        {error && <p className="text-sm text-red-500">{error}</p>}
+
         <p className="text-sm text-gray-400">
-          Account Exists ?{" "}
+          Already have an account?{" "}
           <Link to="/login" className="text-purple-400 hover:underline">
             Login
           </Link>
         </p>
-        {error && <p className="text-sm text-red-500">{error}</p>}
       </form>
     </div>
   );

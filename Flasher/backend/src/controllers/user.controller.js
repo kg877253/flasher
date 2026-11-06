@@ -97,7 +97,7 @@ const registerUser = asyncHandler(async (req, res) => {
     }
 
     // Step8-->return response to frontend
-    return res.status(201).json(new ApiResponse(200, createdUser, "User created successfully in db yahhu"))
+    return res.status(201).json(new ApiResponse(201, createdUser, "User created successfully in db yahhu"))
 });
 
 
