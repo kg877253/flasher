@@ -1,17 +1,34 @@
 import { Link } from "react-router-dom";
+import { timeAgo, formatDuration } from "../utils/formatters";
 
 export default function VideoCard({ video }) {
   return (
     <Link to={`/watch/${video._id}`} className="group block">
-      <div className="aspect-video overflow-hidden rounded-md bg-gray-800">
-        {video.thumbnail && (
-          <img src={video.thumbnail} alt={video.title} className="h-full w-full object-cover group-hover:scale-105 transition" />
-        )}
+      <div className="relative aspect-video overflow-hidden rounded-md bg-gray-800">
+        <img
+          src={video.thumbnail}
+          alt={video.title}
+          className="h-full w-full object-cover transition group-hover:scale-103"
+        />
+        <span className="absolute bottom-1 right-1 rounded bg-black/80 px-1 text-xs">
+          {formatDuration(video.duration)}
+        </span>
       </div>
-      <h3 className="mt-2 line-clamp-2 font-semibold">{video.title}</h3>
-      <p className="text-sm text-gray-400">
-        {video.views.toLocaleString()} views
-      </p>
+
+      <div className="mt-2 flex gap-2">
+        <img
+          src={video.owner?.avatar}
+          alt={video.owner?.username}
+          className="h-9 w-9 shrink-0 rounded-full bg-gray-700 object-cover"
+        />
+        <div>
+          <h3 className="line-clamp-2 font-semibold">{video.title}</h3>
+          <p className="text-sm text-gray-400">{video.owner?.username}</p>
+          <p className="text-sm text-gray-400">
+            {video.views.toLocaleString()} views • {timeAgo(video.createdAt)}
+          </p>
+        </div>
+      </div>
     </Link>
   );
 }
