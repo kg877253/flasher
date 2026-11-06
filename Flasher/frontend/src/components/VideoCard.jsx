@@ -3,7 +3,7 @@ import { timeAgo, formatDuration } from "../utils/formatters";
 
 export default function VideoCard({ video }) {
   return (
-    <Link to={`/watch/${video._id}`} className="group block">
+    <Link to={`/videos/${video._id}`} className="group block">
       <div className="relative aspect-video overflow-hidden rounded-md bg-gray-800">
         <img
           src={video.thumbnail}

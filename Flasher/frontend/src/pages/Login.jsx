@@ -1,9 +1,11 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 
 export default function Login() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/";
   const { login } = useAuth();
   const [form, setForm] = useState({ identifier: "", password: "" });
   const [error, setError] = useState(null);
@@ -27,7 +29,7 @@ export default function Login() {
 
     try {
       await login(credentials);
-      navigate("/");
+      navigate(from, { replace: true });
     } catch (err) {
       setError(err.response?.data?.message || "credentials went wrong");
     } finally {

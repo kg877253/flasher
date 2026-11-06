@@ -1,28 +1,41 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import MainLayout from "./layouts/MainLayout";
+import GuestRoute from "./routes/GuestRoute";
+import ProtectedRoute from "./routes/ProtectedRoute";
 import Home from "./pages/Home";
-import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
+import Video from "./pages/Video";
+import NotFound from "./pages/NotFound";
 
 const router = createBrowserRouter([
+  {
+    // Only for logged-out users
+    element: <GuestRoute />,
+    children: [
+      { path: "/login", element: <Login /> },
+      { path: "/register", element: <SignUp /> },
+    ],
+  },
   {
     path: "/",
     element: <MainLayout />,
     children: [
+      // Public
       { index: true, element: <Home /> },
-      // baad me: login, register, watch/:id, channel/:username
+
+      // Only for logged-in users
+      {
+        element: <ProtectedRoute />,
+        children: [
+          { path: "videos/:id", element: <Video /> },
+          // more protected pages go here later
+        ],
+      },
+
       { path: "*", element: <NotFound /> },
     ],
   },
-  {
-    path:"/login",
-    element : <Login/>
-  },
-  {
-    path:"/register",
-    element : <SignUp/>
-  }
 ]);
 
 export default function App() {
