@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import api from "../api/axios";
+import { getCurrentUser, loginUser, logoutUser } from "../api/user.api";
 import { AuthContext } from "./context";
 
 export default function AuthProvider({ children }) {
@@ -10,8 +10,8 @@ export default function AuthProvider({ children }) {
   useEffect(() => {
     const fetchCurrentUser = async () => {
       try {
-        const res = await api.get("/users/current-user");
-        setUser(res.data.data);
+        const currentUser = await getCurrentUser();
+        setUser(currentUser);
       } catch {
         setUser(null);
       } finally {
@@ -23,12 +23,12 @@ export default function AuthProvider({ children }) {
   }, []);
 
   const login = async (credentials) => {
-    const res = await api.post("/users/login", credentials);
-    setUser(res.data.data.user);
+    const data = await loginUser(credentials);
+    setUser(data.user);
   };
 
   const logout = async () => {
-    await api.post("/users/logout");
+    await logoutUser();
     setUser(null);
   };
 

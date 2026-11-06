@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import api from "../api/axios";
+import { getAllVideos } from "../api/video.api";
 import VideoCard from "../components/VideoCard";
 import VideoCardSkeleton from "../components/VideoCardSkeleton";
 
@@ -7,22 +7,21 @@ export default function Home() {
   const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [page, setPage] = useState(1);
 
   useEffect(() => {
     const fetchVideos = async () => {
       try {
-        const res = await api.get("/videos", { params: { page: 1, limit: 12 } });
-        setVideos(res.data.data.allvideos);
+        const data = await getAllVideos({ page: 1, limit: 12 });
+        setVideos(data.allvideos);
       } catch (err) {
-        setError(err.response?.data?.message || "Videos load nahi ho paayi");
+        setError(err.response?.data?.message || "Failed to load videos");
       } finally {
         setLoading(false);
       }
     };
     fetchVideos();
   }, []);
-
+  
   const grid = "grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4";
 
   if (loading) {

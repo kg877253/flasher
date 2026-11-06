@@ -2,12 +2,11 @@ import { Link } from "react-router-dom";
 import useAuth from "../hooks/useAuth.js";
 
 export default function Navbar() {
-  const { user } = useAuth();
-  const { loading } = useAuth();
+  const { user, loading, logout } = useAuth();
 
   const handleLogout = async () => {
     try {
-      await Logout()
+      await logout();
     } catch (err) {
       console.error("Logout failed:", err);
     }

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import api from "../api/axios";
+import { registerUser } from "../api/user.api";
 
 export default function SignUp() {
   const navigate = useNavigate();
@@ -32,7 +32,7 @@ export default function SignUp() {
     if (coverImage) data.append("coverImage", coverImage);
 
     try {
-      await api.post("/users/register", data);
+      await registerUser(data);
       navigate("/login");
     } catch (err) {
       setError(err.response?.data?.message || "Something went wrong");
