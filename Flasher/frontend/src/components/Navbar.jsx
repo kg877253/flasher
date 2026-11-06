@@ -1,7 +1,5 @@
 import { Link } from "react-router-dom";
 import useAuth from "../hooks/useAuth.js";
-import { useEffect } from "react";
-import api from "../api/axios.js";
 
 export default function Navbar() {
   const { user } = useAuth();
@@ -9,9 +7,7 @@ export default function Navbar() {
 
   const handleLogout = async () => {
     try {
-      await api.post("/users/logout");
-      window.location.reload(); // Refresh the page to update the UI
-      
+      await Logout()
     } catch (err) {
       console.error("Logout failed:", err);
     }
