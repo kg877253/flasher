@@ -4,13 +4,14 @@ import api from "../api/axios";
 import { useNavigate } from "react-router-dom";
 
 export default function SignUp() {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   const [form, setForm] = useState({
     fullname: "",
     username: "",
     email: "",
     password: "",
   });
+  const [error, setError] = useState(null);
   const [avatar, setAvatar] = useState(null);
   const [coverImage, setCoverImage] = useState(null);
 
@@ -19,19 +20,26 @@ export default function SignUp() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!avatar) return alert("Avatar required hai");
+    if (!avatar) return alert("Avatar is required");
 
     const data = new FormData();
     Object.entries(form).forEach(([key, value]) => data.append(key, value));
     data.append("avatar", avatar);
     if (coverImage) data.append("coverImage", coverImage);
 
-    const res = await api.post("/users/register", data, {
-      headers: { "Content-Type": "multipart/form-data" },
-    });
 
-    if(res.status === 201) {
+    try {
+
+      const res = await api.post("/users/register", data, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      if (res.status === 201) {
         navigate("/login");
+      }
+    }
+    catch (err) {
+      setError(err.response?.data?.message || "An error occurred");
     }
     console.log(res);
   };
@@ -75,6 +83,7 @@ export default function SignUp() {
             Login
           </Link>
         </p>
+        {error && <p className="text-sm text-red-500">{error}</p>}
       </form>
     </div>
   );
