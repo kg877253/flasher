@@ -1,18 +1,18 @@
 import { useEffect, useState } from "react";
 import api from "../api/axios";
-import VideoCard from "../components/Videocard";
+import VideoCard from "../components/VideoCard";
 import VideoCardSkeleton from "../components/VideoCardSkeleton";
 
 export default function Home() {
   const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
     const fetchVideos = async () => {
       try {
         const res = await api.get("/videos", { params: { page: 1, limit: 12 } });
-        console.log(res);
         setVideos(res.data.data.allvideos);
       } catch (err) {
         setError(err.response?.data?.message || "Videos load nahi ho paayi");

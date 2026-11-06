@@ -1,18 +1,81 @@
-import React from 'react'
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import api from "../api/axios";
+import { useNavigate } from "react-router-dom";
 
-const SignUp = () => {
+export default function SignUp() {
+    const navigate = useNavigate();
+  const [form, setForm] = useState({
+    fullname: "",
+    username: "",
+    email: "",
+    password: "",
+  });
+  const [avatar, setAvatar] = useState(null);
+  const [coverImage, setCoverImage] = useState(null);
+
+  const handleChange = (e) =>
+    setForm({ ...form, [e.target.name]: e.target.value });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!avatar) return alert("Avatar required hai");
+
+    const data = new FormData();
+    Object.entries(form).forEach(([key, value]) => data.append(key, value));
+    data.append("avatar", avatar);
+    if (coverImage) data.append("coverImage", coverImage);
+
+    const res = await api.post("/users/register", data, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+
+    if(res.status === 201) {
+        navigate("/login");
+    }
+    console.log(res);
+  };
+
+  const inputClass =
+    "w-full rounded-md border border-gray-500 bg-transparent px-3 py-2 outline-none focus:border-purple-400";
+  const fileClass =
+    "w-full text-sm text-gray-300 file:mr-3 file:rounded-md file:border-0 file:bg-purple-500 file:px-3 file:py-1 file:text-white";
+
   return (
-    <div className='signup flex flex-col items-center justify-center '>
-      <form action="submit" method="post" className='flex flex-col gap-4 h-[50%] w-[50%] m-10 p-4 rounded-lg shadow-md'>
-        <input type="text" placeholder="Username" />
-        <input type="text " placeholder="Full Name" />
-        <input type="email" placeholder="Email" />
-        <input type="password" placeholder="Password" />
-        <input type="file" name="avatar" id="avatar" placeholder='Avatar'/>
-        <button type="submit">Sign Up</button>
+    <div className="flex min-h-screen items-center justify-center bg-black py-10 text-white">
+      <form
+        onSubmit={handleSubmit}
+        className="flex w-full max-w-sm flex-col gap-4 rounded-lg border border-gray-700 p-6"
+      >
+        <h1 className="text-2xl font-bold">Sign Up</h1>
+
+        <input name="fullname" type="text" placeholder="Full name"
+          value={form.fullname} onChange={handleChange} className={inputClass} required />
+        <input name="username" type="text" placeholder="Username"
+          value={form.username} onChange={handleChange} className={inputClass} required />
+        <input name="email" type="email" placeholder="Email"
+          value={form.email} onChange={handleChange} className={inputClass} required />
+        <input name="password" type="password" placeholder="Password"
+          value={form.password} onChange={handleChange} className={inputClass} required />
+
+        <label className="text-sm text-gray-400">Avatar (required)</label>
+        <input type="file" accept="image/*"
+          onChange={(e) => setAvatar(e.target.files[0])} className={fileClass} />
+
+        <label className="text-sm text-gray-400">Cover image (optional)</label>
+        <input type="file" accept="image/*"
+          onChange={(e) => setCoverImage(e.target.files[0])} className={fileClass} />
+
+        <button className="rounded-md bg-purple-500 py-2 font-semibold hover:bg-purple-600 cursor-pointer">
+          Sign Up
+        </button>
+        <p className="text-sm text-gray-400">
+          Account Exists ?{" "}
+          <Link to="/login" className="text-purple-400 hover:underline">
+            Login
+          </Link>
+        </p>
       </form>
     </div>
-  )
+  );
 }
-
-export default SignUp
