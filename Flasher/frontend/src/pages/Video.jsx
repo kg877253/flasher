@@ -7,6 +7,7 @@ import Comments from "../components/Comments";
 import VideoOwner from "../components/VideoOwner";
 
 export default function Video() {
+  
   const { id } = useParams();
   const [video, setVideo] = useState(null);
   const [loading, setLoading] = useState(true);
