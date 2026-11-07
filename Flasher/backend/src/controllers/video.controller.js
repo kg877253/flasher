@@ -90,10 +90,10 @@ const publishAVideo = asyncHandler(async (req, res) => {
     if (!videofile || !thumbnail) {
         throw new ApiError(400, "Video file and thumbnail are required")
     }
-
     if (!videofile.size || !thumbnail.size) {
         throw new ApiError(400, "Uploaded file is empty");
     }
+
     //Step-2
     const videoUpload = await uploadToCloudinary(videofile.path)
     const thumbnailUpload = await uploadToCloudinary(thumbnail.path)
