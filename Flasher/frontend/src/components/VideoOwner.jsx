@@ -47,7 +47,7 @@ export default function VideoOwner({ owner }) {
   const isOwnChannel = user?._id === owner._id;
 
   return (
-    <div className="mt-3">
+    <div className="">
       <div className="flex items-center justify-between gap-3">
         <div className="flex min-w-0 items-center gap-3">
           <img

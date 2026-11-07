@@ -30,13 +30,10 @@ export default function Sidebar() {
   // On the video page the sidebar shrinks to icons only
   const collapsed = pathname.startsWith("/videos/");
 
-  const asideClass = ` ${collapsed ? "hidden" : "block"} shrink-0 flex-col justify-between border-r border-gray-800 p-2 md:flex ${
-    collapsed ? "w-20" : "w-56"
-  }`;
-
+  const asideClass = `hidden shrink-0 flex-col justify-between overflow-y-auto border-r border-gray-800 p-2 md:flex ${collapsed ? "w-20" : "w-56"
+    }`;
   const linkClass = ({ isActive }) =>
-    `flex items-center gap-4 rounded-lg px-3 py-2.5 text-sm ${
-      collapsed ? "justify-center" : ""
+    `flex items-center gap-4 rounded-lg px-3 py-2.5 text-sm ${collapsed ? "justify-center" : ""
     } ${isActive ? "bg-white/15 font-semibold" : "hover:bg-white/10"}`;
 
   const renderLink = ({ label, to, icon: Icon }) => (

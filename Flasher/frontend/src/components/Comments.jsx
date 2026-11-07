@@ -3,24 +3,31 @@ import useAuth from "../hooks/useAuth";
 import { getCommentsByVideoId, addComment } from "../api/comment.api";
 import { timeAgo } from "../utils/formatters";
 
+const LIMIT = 10;
+
 export default function Comments({ videoId }) {
   const { user } = useAuth();
   const [comments, setComments] = useState([]);
   const [total, setTotal] = useState(0);
+  const [page, setPage] = useState(1);
+  const [hasNextPage, setHasNextPage] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [text, setText] = useState("");
   const [posting, setPosting] = useState(false);
   const [error, setError] = useState(null);
 
-  // Load the comments whenever the video changes
+  // Load the first page whenever the video changes
   useEffect(() => {
     const fetchComments = async () => {
       setLoading(true);
       setError(null);
       try {
-        const data = await getCommentsByVideoId(videoId, { page: 1, limit: 10 });
+        const data = await getCommentsByVideoId(videoId, { page: 1, limit: LIMIT });
         setComments(data.docs);
         setTotal(data.totalDocs);
+        setPage(1);
+        setHasNextPage(data.hasNextPage);
       } catch (err) {
         setError(err.response?.data?.message || "Failed to load comments");
       } finally {
@@ -30,6 +37,28 @@ export default function Comments({ videoId }) {
 
     fetchComments();
   }, [videoId]);
+
+  const handleShowMore = async () => {
+    if (loadingMore) return;
+
+    setLoadingMore(true);
+    setError(null);
+    try {
+      const data = await getCommentsByVideoId(videoId, { page: page + 1, limit: LIMIT });
+
+      // A new comment can shift the pages, so skip the comments we already have
+      const existingIds = new Set(comments.map((comment) => comment._id));
+      const newComments = data.docs.filter((comment) => !existingIds.has(comment._id));
+
+      setComments([...comments, ...newComments]);
+      setPage(page + 1);
+      setHasNextPage(data.hasNextPage);
+    } catch (err) {
+      setError(err.response?.data?.message || "Failed to load more comments");
+    } finally {
+      setLoadingMore(false);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -115,6 +144,17 @@ export default function Comments({ videoId }) {
             </li>
           ))}
         </ul>
+      )}
+
+      {/* Show more */}
+      {hasNextPage && (
+        <button
+          onClick={handleShowMore}
+          disabled={loadingMore}
+          className="mt-5 cursor-pointer rounded-full border border-gray-600 px-4 py-2 text-sm font-medium hover:bg-white/10 disabled:opacity-60"
+        >
+          {loadingMore ? "Loading..." : "Show more comments"}
+        </button>
       )}
     </section>
   );

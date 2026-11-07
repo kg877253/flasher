@@ -5,9 +5,10 @@ import { timeAgo, formatViews } from "../utils/formatters";
 import SuggestedVideos from "../components/SuggestedVideos";
 import Comments from "../components/Comments";
 import VideoOwner from "../components/VideoOwner";
+import LikeButton from "../components/LikeButton";
 
 export default function Video() {
-  
+
   const { id } = useParams();
   const [video, setVideo] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -46,7 +47,14 @@ export default function Video() {
 
         <h1 className="mt-3 text-xl font-semibold">{video.title}</h1>
 
-        <VideoOwner owner={video.owner} />
+        <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
+          <VideoOwner owner={video.owner} />
+          <LikeButton
+            videoId={video._id}
+            initialLiked={video.isLiked}
+            initialCount={video.likesCount}
+          />
+        </div>
 
         <div className="mt-4 rounded-xl bg-white/10 p-3 text-sm">
           <p className="font-medium">
