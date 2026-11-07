@@ -50,7 +50,7 @@ export default function Home() {
   const loadMore = useCallback(async () => {
     setLoadingMore(true);
     try {
-      const data = await getAllVideos({ page: page + 1, limit: LIMIT, query });
+      const data = await getAllVideos({ page: page+1, limit: LIMIT, query });
       setVideos((current) => [...current, ...data.allvideos]);
       setPage(page + 1);
       setHasNextPage(data.hasNextPage);
