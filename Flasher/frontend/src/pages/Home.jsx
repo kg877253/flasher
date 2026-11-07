@@ -40,7 +40,6 @@ export default function Home() {
     };
 
     fetchFirstPage();
-
     return () => {
       ignore = true;
     };
