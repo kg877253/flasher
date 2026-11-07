@@ -7,9 +7,9 @@ import VideoCardSkeleton from "../components/VideoCardSkeleton";
 const LIMIT = 12;
 
 export default function Home() {
+  
   const [searchParams] = useSearchParams();
   const query = searchParams.get("query") || "";
-
   const [videos, setVideos] = useState([]);
   const [page, setPage] = useState(1);
   const [hasNextPage, setHasNextPage] = useState(false);
