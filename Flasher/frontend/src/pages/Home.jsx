@@ -7,7 +7,7 @@ import VideoCardSkeleton from "../components/VideoCardSkeleton";
 const LIMIT = 12;
 
 export default function Home() {
-  
+
   const [searchParams] = useSearchParams();
   const query = searchParams.get("query") || "";
   const [videos, setVideos] = useState([]);
@@ -120,6 +120,7 @@ export default function Home() {
       <div ref={bottomRef} className="h-10" />
 
       {error && <p className="text-center text-red-400">{error}</p>}
+      
     </div>
   );
 }
