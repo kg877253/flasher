@@ -3,6 +3,7 @@ import { timeAgo, formatDuration } from "../utils/formatters";
 
 export default function VideoCard({ video }) {
   return (
+    //on clicking the video card, it will navigate to the video page with the video id in the url
     <Link to={`/videos/${video._id}`} className="group block">
       <div className="relative aspect-video overflow-hidden rounded-md bg-gray-800">
         <img
