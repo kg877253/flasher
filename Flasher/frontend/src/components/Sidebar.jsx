@@ -30,7 +30,7 @@ export default function Sidebar() {
   // On the video page the sidebar shrinks to icons only
   const collapsed = pathname.startsWith("/videos/");
 
-  const asideClass = `hidden shrink-0 flex-col justify-between border-r border-gray-800 p-2 md:flex ${
+  const asideClass = ` ${collapsed ? "hidden" : "block"} shrink-0 flex-col justify-between border-r border-gray-800 p-2 md:flex ${
     collapsed ? "w-20" : "w-56"
   }`;
 

@@ -24,3 +24,8 @@ export const formatViews = (views = 0) => {
   const count = new Intl.NumberFormat("en", { notation: "compact" }).format(views);
   return `${count} ${views === 1 ? "view" : "views"}`;
 };
+
+export const formatSubscribers = (count = 0) => {
+  const text = new Intl.NumberFormat("en", { notation: "compact" }).format(count);
+  return `${text} ${count === 1 ? "subscriber" : "subscribers"}`;
+};
