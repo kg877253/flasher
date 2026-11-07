@@ -19,3 +19,8 @@ export const formatDuration = (sec = 0) => {
   const s = Math.floor(sec % 60);
   return `${m}:${String(s).padStart(2, "0")}`;
 };
+
+export const formatViews = (views = 0) => {
+  const count = new Intl.NumberFormat("en", { notation: "compact" }).format(views);
+  return `${count} ${views === 1 ? "view" : "views"}`;
+};
