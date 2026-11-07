@@ -1,8 +1,20 @@
 import { Link } from "react-router-dom";
 import useAuth from "../hooks/useAuth.js";
+import { useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 export default function Navbar() {
   const { user, loading, logout } = useAuth();
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const [searchText, setSearchText] = useState(searchParams.get("query") || "");
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    const text = searchText.trim();
+    // encodeURIComponent keeps spaces and special characters safe in the URL
+    navigate(text ? `/?query=${encodeURIComponent(text)}` : "/");
+  };
 
   const handleLogout = async () => {
     try {
@@ -18,9 +30,11 @@ export default function Navbar() {
         Flasher
       </Link>
 
-      <form role="search" className="w-full max-w-xl">
+      <form role="search" onSubmit={handleSearch} className="w-full max-w-xl">
         <input
           type="text"
+          value={searchText}
+          onChange={(e) => setSearchText(e.target.value)}
           placeholder="Search"
           className="w-full rounded-full border border-gray-700 bg-white/5 px-4 py-2 outline-none placeholder:text-gray-500 focus:border-purple-400"
         />
