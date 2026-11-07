@@ -150,9 +150,17 @@ const getVideoById = asyncHandler(async (req, res) => {
 
     const populatedVideo = await video.populate("owner", "username avatar fullname")
 
+    // Total likes of this video and whether the logged-in user has liked it
+    const likesCount = await Like.countDocuments({ video: videoId })
+    const isLiked = await Like.exists({ video: videoId, likedBy: req.user._id })
+
     return res
         .status(200)
-        .json(new ApiResponse(200, populatedVideo, "Video fetched successfully"))
+        .json(new ApiResponse(
+            200,
+            { ...populatedVideo.toObject(), likesCount, isLiked: Boolean(isLiked) },
+            "Video fetched successfully"
+        ))
 })
 
 
