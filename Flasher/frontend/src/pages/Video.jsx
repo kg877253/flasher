@@ -47,7 +47,7 @@ export default function Video() {
 
         <h1 className="mt-3 text-xl font-semibold">{video.title}</h1>
 
-        <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
+        <div className="mt-3 flex flex-wrap items-center justify-between gap-3 border-b border-gray-400 pb-2">
           <VideoOwner owner={video.owner} />
           <LikeButton
             videoId={video._id}

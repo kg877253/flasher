@@ -80,7 +80,7 @@ export default function Home() {
   if (loading) {
     return (
       <div className={grid}>
-        {Array.from({ length: 8 }, (_, i) => (
+        {Array.from({ length: 10 }, (_, i) => (
           <VideoCardSkeleton key={i} />
         ))}
       </div>
@@ -120,7 +120,7 @@ export default function Home() {
       <div ref={bottomRef} className="h-10" />
 
       {error && <p className="text-center text-red-400">{error}</p>}
-      
+
     </div>
   );
 }

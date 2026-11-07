@@ -86,7 +86,7 @@ export default function Comments({ videoId }) {
       </h2>
 
       {/* Add comment */}
-      <form onSubmit={handleSubmit} className="mt-4 flex gap-3">
+      <form onSubmit={handleSubmit} className="mt-4 flex gap-3 border-2 border-gray-400 p-3 rounded-lg">
         <img
           src={user?.avatar}
           alt={user?.username}
