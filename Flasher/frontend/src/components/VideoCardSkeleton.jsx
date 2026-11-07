@@ -1,5 +1,7 @@
 export default function VideoCardSkeleton() {
+
   return (
+
     <div className="animate-pulse">
       <div className="aspect-video rounded-md bg-gray-800" />
       <div className="mt-2 flex gap-2">
@@ -10,5 +12,6 @@ export default function VideoCardSkeleton() {
         </div>
       </div>
     </div>
+    
   );
 }
