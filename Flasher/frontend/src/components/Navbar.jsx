@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import SpecularButton from "./SpecularButton";
 import useAuth from "../hooks/useAuth.js";
 import Logo from "./Logo";
 import Dropdown, { DropdownItem, DropdownSeparator } from "./Dropdown";
@@ -79,21 +80,38 @@ export default function Navbar() {
               Log out
             </DropdownItem>
           </Dropdown>
-        ) : (
-          <div className="flex items-center gap-2">
-            <Link
-              to="/login"
-              className="rounded-full border border-gray-600 px-4 py-1.5 text-sm font-medium hover:bg-white/10"
-            >
-              Login
-            </Link>
-            <Link
-              to="/register"
-              className="rounded-full bg-purple-500 px-4 py-1.5 text-sm font-medium hover:bg-purple-600"
-            >
-              Sign Up
-            </Link>
-          </div>
+        ) :  (
+        <div className="flex items-center gap-2">
+          {/* Login: glass button */}
+          <SpecularButton
+            size="sm"
+            radius={999}
+            lineColor="#ffffff"
+            baseColor="#737373"
+            followMouse
+            proximity={250}
+            onClick={() => navigate("/login")}
+          >
+            Login
+          </SpecularButton>
+
+          {/* Sign Up: purple button */}
+          <SpecularButton
+            size="sm"
+            radius={999}
+            tint="#a855f7"
+            tintOpacity={0.85}
+            baseColor="#d8b4fe"
+            lineColor="#ffffff"
+            idleIntensity={0.45}
+            shineSize={12}
+            followMouse
+            proximity={250}
+            onClick={() => navigate("/register")}
+          >
+            Sign Up
+          </SpecularButton>
+        </div>
         )}
       </div>
     </header>
