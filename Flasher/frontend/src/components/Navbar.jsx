@@ -1,7 +1,9 @@
-import { Link } from "react-router-dom";
-import useAuth from "../hooks/useAuth.js";
 import { useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import useAuth from "../hooks/useAuth.js";
+import Logo from "./Logo";
+import Dropdown, { DropdownItem, DropdownSeparator } from "./Dropdown";
+import { ChevronDownIcon, LogoutIcon, SettingsIcon, UserIcon } from "./Icons";
 
 export default function Navbar() {
   const { user, loading, logout } = useAuth();
@@ -26,9 +28,7 @@ export default function Navbar() {
 
   return (
     <header className="sticky top-0 z-10 flex items-center justify-between gap-4 border-b border-gray-800 bg-black px-4 py-3">
-      <Link to="/" className="shrink-0 text-2xl font-bold tracking-tight text-purple-400">
-        Flasher
-      </Link>
+      <Logo />
 
       <form role="search" onSubmit={handleSearch} className="w-full max-w-xl">
         <input
@@ -44,23 +44,47 @@ export default function Navbar() {
         {loading ? (
           <div className="h-9 w-24" />
         ) : user ? (
-          <div className="flex items-center gap-3">
-            <span className="hidden text-sm text-gray-300 sm:block">{user.username}</span>
-            <img
-              src={user.avatar}
-              alt={user.username}
-              className="h-9 w-9 rounded-full bg-gray-700 object-cover"
-            />
-            <button
-              onClick={handleLogout}
-              className="cursor-pointer rounded-full bg-white/10 px-4 py-1.5 text-sm font-medium hover:bg-white/20"
-            >
-              Logout
-            </button>
-          </div>
+          <Dropdown
+            label="Open user menu"
+            trigger={
+              <>
+                <img
+                  src={user.avatar}
+                  alt={user.username}
+                  className="h-9 w-9 rounded-full bg-gray-700 object-cover"
+                />
+                <span className="hidden max-w-32 truncate text-sm font-medium sm:block">
+                  {user.fullname}
+                </span>
+                <ChevronDownIcon
+                  size={16}
+                  className="text-gray-400 transition-transform group-aria-expanded:rotate-180"
+                />
+              </>
+            }
+          >
+            <div className="px-2 py-2">
+              <p className="truncate text-sm font-medium">{user.fullname}</p>
+              <p className="truncate text-xs text-gray-400">@{user.username}</p>
+            </div>
+            <DropdownSeparator />
+            <DropdownItem to={`/channel/${user.username}`} icon={UserIcon}>
+              My channel
+            </DropdownItem>
+            <DropdownItem to="/settings" icon={SettingsIcon}>
+              Settings
+            </DropdownItem>
+            <DropdownSeparator />
+            <DropdownItem icon={LogoutIcon} danger onClick={handleLogout}>
+              Log out
+            </DropdownItem>
+          </Dropdown>
         ) : (
-          <div className="flex items-center gap-3">
-            <Link to="/login" className="text-sm hover:underline">
+          <div className="flex items-center gap-2">
+            <Link
+              to="/login"
+              className="rounded-full border border-gray-600 px-4 py-1.5 text-sm font-medium hover:bg-white/10"
+            >
               Login
             </Link>
             <Link

@@ -70,3 +70,30 @@ export const SettingsIcon = (props) => (
     <circle cx="12" cy="12" r="3" />
   </Icon>
 );
+
+export const BoltIcon = (props) => (
+  <Icon {...props}>
+    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+  </Icon>
+);
+
+export const UserIcon = (props) => (
+  <Icon {...props}>
+    <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+    <circle cx="12" cy="7" r="4" />
+  </Icon>
+);
+
+export const LogoutIcon = (props) => (
+  <Icon {...props}>
+    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+    <polyline points="16 17 21 12 16 7" />
+    <line x1="21" x2="9" y1="12" y2="12" />
+  </Icon>
+);
+
+export const ChevronDownIcon = (props) => (
+  <Icon {...props}>
+    <path d="m6 9 6 6 6-6" />
+  </Icon>
+);
