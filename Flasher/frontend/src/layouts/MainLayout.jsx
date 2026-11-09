@@ -17,7 +17,7 @@ export default function MainLayout() {
       <Navbar />
       <div className="flex min-h-0 flex-1">
         <Sidebar />
-        <main ref={mainRef} className="min-w-0 flex-1 overflow-y-auto p-4">
+        <main ref={mainRef} className="min-w-0 flex-1 overflow-y-auto p-2">
           <Outlet />
         </main>
       </div>
