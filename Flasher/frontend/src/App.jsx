@@ -8,6 +8,7 @@ import SignUp from "./pages/SignUp";
 import Video from "./pages/Video";
 import NotFound from "./pages/NotFound";
 import Channel from "./pages/Channel";
+import Playlist from "./pages/Playlist";
 
 const router = createBrowserRouter([
   {
@@ -30,6 +31,7 @@ const router = createBrowserRouter([
         element: <ProtectedRoute />,
         children: [
           { path: "videos/:id", element: <Video /> },
+          { path: "playlists/:playlistId", element: <Playlist /> },
 
           {
             path: "users/channel/:username",

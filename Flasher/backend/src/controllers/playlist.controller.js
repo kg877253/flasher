@@ -39,6 +39,7 @@ const getUserPlaylists = asyncHandler(async (req, res) => {
 
     // khaali list error nahi hai, 200 ke saath [] jayega
     const playlists = await Playlist.find({ owner: userId })
+        .populate("videos", "thumbnail title duration views")
 
     return res
         .status(200)

@@ -1,15 +1,9 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { getUserPlaylists } from "../../api/playlist.api";
-import { timeAgo } from "../../utils/formatters";
+import { formatViews, timeAgo } from "../../utils/formatters";
 import EmptyState from "./EmptyState";
 import { FolderIcon } from "../Icons";
-
-// Playlists have no thumbnail in the backend, so every card gets one of these gradients
-const GRADIENTS = [
-  "from-pink-500 via-orange-400 to-purple-500",
-  "from-purple-500 via-fuchsia-500 to-pink-500",
-  "from-blue-500 via-purple-500 to-pink-400",
-];
 
 const grid = "grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4";
 
@@ -68,30 +62,51 @@ export default function PlaylistsTab({ channelId }) {
 
   return (
     <div className={grid}>
-      {playlists.map((playlist, i) => (
-        <div
-          key={playlist._id}
-          className="fade-up group pt-3"
-          style={{ animationDelay: `${Math.min(i, 8) * 40}ms` }}
-        >
-          {/* Stacked-cards look: two layers behind the main card lift a little on hover */}
-          <div className="relative aspect-video">
-            <div className="absolute inset-x-5 -top-2 h-full rounded-xl bg-white/10 transition-transform duration-300 group-hover:-translate-y-1" />
-            <div className="absolute inset-x-2.5 -top-1 h-full rounded-xl bg-white/20 transition-transform duration-300 group-hover:-translate-y-0.5" />
-            <div
-              className={`relative flex h-full items-end justify-end rounded-xl bg-gradient-to-br p-3 ${GRADIENTS[i % GRADIENTS.length]}`}
-            >
-              <span className="rounded-full bg-black/60 px-2.5 py-1 text-xs font-medium backdrop-blur">
-                {playlist.videos.length} {playlist.videos.length === 1 ? "video" : "videos"}
-              </span>
-            </div>
-          </div>
+      {playlists.map((playlist, i) => {
+        const firstVideo = playlist.videos?.[0];
+        const videoCount = playlist.videos?.length || 0;
+        const totalViews = playlist.videos?.reduce((total, video) => total + (video.views || 0), 0) || 0;
 
-          <h3 className="mt-3 line-clamp-1 font-semibold">{playlist.name}</h3>
-          <p className="line-clamp-2 text-sm text-gray-400">{playlist.description}</p>
-          <p className="mt-1 text-xs text-gray-500">Updated {timeAgo(playlist.updatedAt)}</p>
-        </div>
-      ))}
+        return (
+          <Link
+            to={`/playlists/${playlist._id}`}
+            key={playlist._id}
+            className="fade-up group block rounded-xl pt-3 outline-none focus-visible:ring-2 focus-visible:ring-purple-400"
+            style={{ animationDelay: `${Math.min(i, 8) * 40}ms` }}
+          >
+            <div className="relative aspect-video overflow-hidden rounded-xl bg-[#272727] shadow-md transition duration-300 group-hover:shadow-xl group-hover:shadow-black/30">
+              {firstVideo?.thumbnail ? (
+                <img
+                  src={firstVideo.thumbnail}
+                  alt=""
+                  className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                />
+              ) : (
+                <div className="flex h-full items-center justify-center text-gray-500">
+                  <FolderIcon size={34} />
+                </div>
+              )}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/10 to-transparent" />
+              <div className="absolute inset-x-3 bottom-3 flex items-end justify-between gap-2">
+                <div className="flex translate-y-2 items-center gap-2 text-xs font-medium opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white text-black shadow-lg">▶</span>
+                  <span className="rounded-md bg-black/70 px-2 py-1 backdrop-blur">Open playlist</span>
+                </div>
+                <div className="rounded-md bg-black/85 px-2.5 py-1.5 text-right text-xs font-medium leading-4 shadow-lg">
+                  <div>{videoCount} {videoCount === 1 ? "video" : "videos"}</div>
+                  <div className="text-gray-300">{formatViews(totalViews)}</div>
+                </div>
+              </div>
+            </div>
+
+            <h3 className="mt-3 line-clamp-1 font-semibold transition-colors group-hover:text-purple-300">{playlist.name}</h3>
+            <p className="mt-1 line-clamp-1 text-sm text-gray-400">{playlist.description}</p>
+            <p className="mt-1 text-xs text-gray-500">
+              {videoCount} {videoCount === 1 ? "video" : "videos"} • {formatViews(totalViews)} • Updated {timeAgo(playlist.updatedAt)}
+            </p>
+          </Link>
+        );
+      })}
     </div>
   );
 }
