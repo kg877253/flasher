@@ -3,6 +3,7 @@ import { Video } from "../models/video.model.js"
 import { Comment } from "../models/comment.model.js"
 import { Like } from "../models/like.model.js"
 import { Playlist } from "../models/playlist.model.js"
+import { User } from "../models/user.model.js"
 import { ApiError } from "../utils/ApiError.js"
 import { ApiResponse } from "../utils/ApiResponse.js"
 import { asyncHandler } from "../utils/asyncHandler.js"
@@ -146,6 +147,17 @@ const getVideoById = asyncHandler(async (req, res) => {
     // response me sahi count dikhane ke liye (save nahi karna)
     if (viewResult.modifiedCount > 0) {
         video.views += 1
+    }
+
+    if (video.isPublished) {
+        await User.updateOne(
+            { _id: req.user._id },
+            { $pull: { watchHistory: videoId } }
+        )
+        await User.updateOne(
+            { _id: req.user._id },
+            { $push: { watchHistory: { $each: [videoId], $position: 0, $slice: 50 } } }
+        )
     }
 
     const populatedVideo = await video.populate("owner", "username avatar fullname")

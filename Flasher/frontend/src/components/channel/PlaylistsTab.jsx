@@ -87,10 +87,14 @@ export default function PlaylistsTab({ channelId }) {
                 </div>
               )}
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/10 to-transparent" />
+              <div className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                <span className="flex h-12 w-12 scale-75 items-center justify-center rounded-full bg-white text-lg text-black shadow-xl transition-transform duration-300 group-hover:scale-100">
+                  ▶
+                </span>
+              </div>
               <div className="absolute inset-x-3 bottom-3 flex items-end justify-between gap-2">
-                <div className="flex translate-y-2 items-center gap-2 text-xs font-medium opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
-                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white text-black shadow-lg">▶</span>
-                  <span className="rounded-md bg-black/70 px-2 py-1 backdrop-blur">Open playlist</span>
+                <div className="translate-y-2 rounded-md bg-black/70 px-2 py-1 text-xs font-medium backdrop-blur transition-transform duration-300 group-hover:translate-y-0">
+                  Open playlist
                 </div>
                 <div className="rounded-md bg-black/85 px-2.5 py-1.5 text-right text-xs font-medium leading-4 shadow-lg">
                   <div>{videoCount} {videoCount === 1 ? "video" : "videos"}</div>

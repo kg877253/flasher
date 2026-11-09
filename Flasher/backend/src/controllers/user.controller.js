@@ -426,6 +426,10 @@ const getWatchHistory = asyncHandler(async (req, res) => {
                 foreignField: "_id",
                 as: "watchHistory",
                 pipeline: [
+                    { $match: { isPublished: true } },
+                    {
+                        $project: { viewedBy: 0 }
+                    },
                     {
                         $lookup: {
                             from: "users",

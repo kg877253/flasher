@@ -23,3 +23,8 @@ export const getUserChannelProfile = async (username) => {
   const res = await api.get(`/users/channel/${username}`);
   return res.data.data; // { fullname, username, avatar, subscribersCount, isSubscribed, ... }
 };
+
+export const getWatchHistory = async () => {
+  const res = await api.get("/users/watch-history");
+  return res.data.data;
+};

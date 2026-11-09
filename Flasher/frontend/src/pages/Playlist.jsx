@@ -68,6 +68,10 @@ export default function Playlist() {
             <div className="flex h-full items-center justify-center text-gray-500">No thumbnail</div>
           )}
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+          <div className="absolute right-3 top-3 rounded-md bg-black/85 px-2.5 py-1.5 text-right text-xs font-medium leading-4 shadow-lg">
+            <div>{playlist.videos.length} {playlist.videos.length === 1 ? "video" : "videos"}</div>
+            <div className="text-gray-300">{formatViews(totalViews)}</div>
+          </div>
           {playlist.videos.length > 0 && (
             <Link
               to={`/videos/${playlist.videos[0]._id}`}
