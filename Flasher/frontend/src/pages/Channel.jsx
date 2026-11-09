@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { getUserChannelProfile } from "../api/user.api.js";
 import { toggleSubscription } from "../api/subscription.api.js";
+import ChannelTabs from "../components/channel/ChannelTabs.jsx";
 import { formatSubscribers } from "../utils/formatters.js";
 import useAuth from "../hooks/useAuth.js";
 import SpecularButton from "../components/SpecularButton.jsx";
@@ -138,6 +139,7 @@ const Channel = () => {
                     </div>
                 )}
             </div>
+            <ChannelTabs key={channel._id} channel={channel} />
         </div>
     );
 };
