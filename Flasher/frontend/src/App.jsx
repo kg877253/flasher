@@ -7,6 +7,7 @@ import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import Video from "./pages/Video";
 import NotFound from "./pages/NotFound";
+import Channel from "./pages/Channel";
 
 const router = createBrowserRouter([
   {
@@ -29,6 +30,11 @@ const router = createBrowserRouter([
         element: <ProtectedRoute />,
         children: [
           { path: "videos/:id", element: <Video /> },
+
+          {
+            path: "users/channel/:username",
+            element: <Channel />,
+          }
           // more protected pages go here later
         ],
       },
@@ -36,6 +42,7 @@ const router = createBrowserRouter([
       { path: "*", element: <NotFound /> },
     ],
   },
+
 ]);
 
 export default function App() {
