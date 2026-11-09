@@ -69,7 +69,7 @@ export default function Navbar() {
               <p className="truncate text-xs text-gray-400">@{user.username}</p>
             </div>
             <DropdownSeparator />
-            <DropdownItem to={`/channel/${user.username}`} icon={UserIcon}>
+            <DropdownItem to={`/users/channel/${user.username}`} icon={UserIcon}>
               My channel
             </DropdownItem>
             <DropdownItem to="/settings" icon={SettingsIcon}>
