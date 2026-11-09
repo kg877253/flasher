@@ -1,20 +1,26 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { getUserChannelProfile } from "../api/user.api.js";
+import { toggleSubscription } from "../api/subscription.api.js";
 import { formatSubscribers } from "../utils/formatters.js";
+import useAuth from "../hooks/useAuth.js";
 import SpecularButton from "../components/SpecularButton.jsx";
 
 const Channel = () => {
     const { username } = useParams();
+    const { user } = useAuth();
     const [channel, setChannel] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [subscribing, setSubscribing] = useState(false);
+    const [subscribeError, setSubscribeError] = useState(null);
 
     useEffect(() => {
         const fetchChannel = async () => {
             // Reset the state when we move from one channel to another
             setLoading(true);
             setError(null);
+            setSubscribeError(null);
             setChannel(null);
 
             try {
@@ -33,6 +39,26 @@ const Channel = () => {
 
         fetchChannel();
     }, [username]);
+
+    const handleSubscribe = async () => {
+        if (subscribing) return;
+
+        setSubscribing(true);
+        setSubscribeError(null);
+        try {
+            const { isSubscribed } = await toggleSubscription(channel._id);
+            // Update only isSubscribed and the count, keep the rest of the channel data
+            setChannel((prev) => ({
+                ...prev,
+                isSubscribed,
+                subscribersCount: prev.subscribersCount + (isSubscribed ? 1 : -1),
+            }));
+        } catch (err) {
+            setSubscribeError(err.response?.data?.message || "Something went wrong");
+        } finally {
+            setSubscribing(false);
+        }
+    };
 
     if (loading) {
         return (
@@ -56,6 +82,9 @@ const Channel = () => {
             </div>
         );
     }
+
+    // The backend does not allow subscribing to your own channel
+    const isOwnChannel = user?._id === channel._id;
 
     return (
         <div>
@@ -81,24 +110,33 @@ const Channel = () => {
                     <h1 className="truncate text-2xl font-semibold sm:text-3xl">
                         {channel.fullname}
                     </h1>
-                    <p className="truncate text-sm text-gray-400 bg-red">@{channel.username}</p>
+                    <p className="truncate text-sm text-gray-400 bg-re">@{channel.username}</p>
                     <p className="mt-1 text-sm text-gray-400">
                         {formatSubscribers(channel.subscribersCount)} •{" "}
                         {channel.subscribedToChannelsCount} subscribed
                     </p>
                 </div>
-                <div className="subscribebutton">
-                    <SpecularButton
-                        size="lg"
-                        radius={999}
-                        lineColor="#fb2c36"
-                        baseColor="#fb2c36"
-                        followMouse
-                        proximity={250}
-                    >
-                        Subscribe
-                    </SpecularButton>
-                </div>
+
+                {!isOwnChannel && (
+                    <div className="shrink-0">
+                        <SpecularButton
+                            size="lg"
+                            radius={999}
+                            lineColor={channel.isSubscribed ? "#ffa2a2" : "#fb2c36"}
+                            baseColor={channel.isSubscribed ? "#ffa2a2" : "#fb2c36"}
+                            followMouse
+                            proximity={250}
+                            disabled={subscribing}
+                            onClick={handleSubscribe}
+                        >
+                            {channel.isSubscribed ? "Subscribed" : "Subscribe"}
+                        </SpecularButton>
+
+                        {subscribeError && (
+                            <p className="mt-1 text-sm text-red-500">{subscribeError}</p>
+                        )}
+                    </div>
+                )}
             </div>
         </div>
     );
