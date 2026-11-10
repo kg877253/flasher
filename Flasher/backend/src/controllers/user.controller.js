@@ -424,7 +424,7 @@ const getWatchHistory = asyncHandler(async (req, res) => {
                 from: "videos",
                 localField: "watchHistory",
                 foreignField: "_id",
-                as: "watchHistory",
+                as: "videos",
                 pipeline: [
                     { $match: { isPublished: true } },
                     {
@@ -456,10 +456,16 @@ const getWatchHistory = asyncHandler(async (req, res) => {
             }
         }
     ])
+    // $lookup returns the videos in database order, not in watch order,
+    // so sort them by their position in the user's watchHistory array (newest first)
+    const watchedIds = (user[0]?.watchHistory || []).map(String)
+    const history = (user[0]?.videos || []).sort(
+        (a, b) => watchedIds.indexOf(String(a._id)) - watchedIds.indexOf(String(b._id))
+    )
 
     return res
         .status(200)
-        .json(new ApiResponse(200, user[0]?.watchHistory || [], "Watch history fetched successfully"))
+        .json(new ApiResponse(200, history, "Watch history fetched successfully"))
 })
 
 
