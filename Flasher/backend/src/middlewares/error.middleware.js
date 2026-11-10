@@ -14,7 +14,11 @@ export const errorHandler = (err, req, res, next) => {
         err instanceof ApiError || statusCode < 500 ? err.message : "Internal server error";
 
     if (err.code === 11000) {
-        message = "This like or subscription already exists";
+        const field = Object.keys(err.keyPattern || {})[0];
+        message =
+            field === "username" || field === "email"
+                ? `This ${field} is already taken`
+                : "This like or subscription already exists";
     }
 
     res.status(statusCode).json({

@@ -1,4 +1,4 @@
-import { isValidObjectId } from "mongoose"
+import mongoose, { isValidObjectId } from "mongoose"
 import { Tweet } from "../models/tweet.model.js"
 import { ApiError } from "../utils/ApiError.js"
 import { ApiResponse } from "../utils/ApiResponse.js"
@@ -40,11 +40,18 @@ const getUserTweets = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Invalid user ID")
     }
 
-    const tweets = await Tweet.find({ owner: userId }).sort({ createdAt: -1 })
-
-    if (!tweets) {
-        throw new ApiError(404, "No tweets found for this user")
-    }
+    const tweets = await Tweet.aggregate([
+        { $match: { owner: new mongoose.Types.ObjectId(userId) } },
+        { $sort: { createdAt: -1 } },
+        { $lookup: { from: "likes", localField: "_id", foreignField: "tweet", as: "likes" } },
+        {
+            $addFields: {
+                likesCount: { $size: "$likes" },
+                isLiked: { $in: [req.user?._id ?? null, "$likes.likedBy"] }
+            }
+        },
+        { $project: { likes: 0 } }
+    ])
 
     return res
         .status(200)

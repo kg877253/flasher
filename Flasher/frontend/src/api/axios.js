@@ -2,10 +2,17 @@ import axios from "axios";
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || "/api/v1",
-  withCredentials:true,
+  withCredentials: true,
 });
 
 let refreshing = null;
+
+export const refreshSession = () => {
+  refreshing ||= api.post("/users/refresh-token").finally(() => {
+    refreshing = null;
+  });
+  return refreshing;
+};
 
 api.interceptors.response.use(
   (response) => response,
@@ -24,13 +31,10 @@ api.interceptors.response.use(
     request._retry = true;
 
     try {
-      refreshing ||= api.post("/users/refresh-token");
-      await refreshing;
-      refreshing = null;
-      return api(request);
+    await refreshSession();
+    return api(request);
     } catch (refreshError) {
-      refreshing = null;
-      window.dispatchEvent(new Event("auth:expired"));
+    window.dispatchEvent(new Event("auth:expired"));
       return Promise.reject(refreshError);
     }
   }

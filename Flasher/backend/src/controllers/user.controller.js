@@ -47,9 +47,14 @@ const registerUser = asyncHandler(async (req, res) => {
     if (!emailRegex.test(email)) {
         throw new ApiError(400, "Email is not valid")
     }
+    if (password.length < 8) {
+        throw new ApiError(400, "Password must be at least 8 characters");
+    }
 
     //Step3
-    const existedUser = await User.findOne({ $or: [{ email }, { username }] })
+    const existedUser = await User.findOne({
+        $or: [{ email: email.trim().toLowerCase() }, { username: username.trim().toLowerCase() }]
+    })
     if (existedUser) {
         throw new ApiError(409, "User already exists")
     }
@@ -135,21 +140,19 @@ const loginUser = asyncHandler(async (req, res) => {
 
     const loggedInUser = await User.findById(existUser._id).select("-password -refreshToken")
 
-    const options = {
-        httpOnly: true,
-        secure: true,
-    }
+    const isProd = process.env.NODE_ENV === "production"
+    const baseOptions = { httpOnly: true, secure: true, sameSite: isProd ? "none" : "lax" }
+    const accessOptions = { ...baseOptions, maxAge: 24 * 60 * 60 * 1000 }
+    const refreshOptions = { ...baseOptions, maxAge: 10 * 24 * 60 * 60 * 1000 }
 
     //6. Send them in cookies
     return res
         .status(200)
-        .cookie("accessToken", accessToken, options)
-        .cookie("refreshToken", refreshToken, options)
+        .cookie("accessToken", accessToken, accessOptions)
+        .cookie("refreshToken", refreshToken, refreshOptions)
         .json(new ApiResponse(200,
             {
-                user: loggedInUser,
-                accessToken,
-                refreshToken
+                user: loggedInUser
             },
             "User logged in successfully")
         )
@@ -171,15 +174,13 @@ const logoutUser = asyncHandler(async (req, res) => {
         { returnDocument: 'after' }
     );
 
-    const options = {
-        httpOnly: true,
-        secure: true,
-    }
+    const isProd = process.env.NODE_ENV === "production"
+    const baseOptions = { httpOnly: true, secure: true, sameSite: isProd ? "none" : "lax" }
 
     return res
         .status(200)
-        .clearCookie("accessToken", options)
-        .clearCookie("refreshToken", options)
+        .clearCookie("accessToken", baseOptions)
+        .clearCookie("refreshToken", baseOptions)
         .json(new ApiResponse(200, {}, "User logged out successfully"))
 })
 
@@ -217,17 +218,17 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
     // naam wahi jo generateAccessandRefreshToken return karta hai
     const { accessToken, refreshToken } = await generateAccessandRefreshToken(user._id)
 
-    const options = {
-        httpOnly: true,
-        secure: true,
-    }
+    const isProd = process.env.NODE_ENV === "production"
+    const baseOptions = { httpOnly: true, secure: true, sameSite: isProd ? "none" : "lax" }
+    const accessOptions = { ...baseOptions, maxAge: 24 * 60 * 60 * 1000 }
+    const refreshOptions = { ...baseOptions, maxAge: 10 * 24 * 60 * 60 * 1000 }
 
     return res
         .status(200)
-        .cookie("accessToken", accessToken, options)
-        .cookie("refreshToken", refreshToken, options)
+        .cookie("accessToken", accessToken, accessOptions)
+        .cookie("refreshToken", refreshToken, refreshOptions)
         .json(new ApiResponse(200,
-            { accessToken, refreshToken },
+            {},
             "Access token refreshed successfully"
         ))
 })
@@ -236,6 +237,12 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
 const changeCurrentPassword = asyncHandler(async (req, res) => {
 
     const { oldPassword, newPassword } = req.body;
+    if (!newPassword || newPassword.length < 8) {
+        throw new ApiError(400, "New password must be at least 8 characters");
+    }
+    if (oldPassword === newPassword) {
+        throw new ApiError(400, "New password must be different from the old one");
+    }
     const user = await User.findById(req.user?._id);
     if (!user) {
         throw new ApiError(404, "User not found");
@@ -264,8 +271,21 @@ const getcurrentuser = asyncHandler(async (req, res) => {
 const updateaccountdetails = asyncHandler(async (req, res) => {
     const { fullname, email } = req.body;
 
-    const user = await User.findByIdAndUpdate(req.user?._id,
-        { $set: { fullname, email } },
+    if (!fullname?.trim() || !email?.trim()) {
+        throw new ApiError(400, "Full name and email are required");
+    }
+    if (!/^\S+@\S+\.\S+$/.test(email.trim())) {
+        throw new ApiError(400, "Email is not valid");
+    }
+
+    const cleanEmail = email.trim().toLowerCase();
+    const emailTaken = await User.exists({ email: cleanEmail, _id: { $ne: req.user._id } });
+    if (emailTaken) {
+        throw new ApiError(409, "This email is already in use");
+    }
+
+    const user = await User.findByIdAndUpdate(req.user._id,
+        { $set: { fullname: fullname.trim(), email: cleanEmail } },
         { returnDocument: 'after' }
     ).select("-password -refreshToken");
 

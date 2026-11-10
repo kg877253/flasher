@@ -14,7 +14,7 @@ import {
     getWatchHistory
 } from "../controllers/user.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
-import { verifyJWT } from "../middlewares/auth.middleware.js";
+import { optionalAuth, verifyJWT } from "../middlewares/auth.middleware.js";
 
 const router = Router();
 
@@ -35,7 +35,7 @@ router.post('/refresh-token', refreshAccessToken); //T-Done
 
 // Public discovery routes
 router.get('/search', searchUsers);
-router.get('/channel/:username', getUserChannelProfile); //T-Done (username-kartik)
+router.get('/channel/:username', optionalAuth, getUserChannelProfile); //T-Done (username-kartik)
 
 // Secured routes
 router.post('/logout', verifyJWT, logoutUser); //T-Done

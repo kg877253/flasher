@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { refreshSession } from "../api/axios";
 import { getCurrentUser, loginUser, logoutUser } from "../api/user.api";
 import { AuthContext } from "./context";
 
@@ -10,10 +11,14 @@ export default function AuthProvider({ children }) {
   useEffect(() => {
     const fetchCurrentUser = async () => {
       try {
-        const currentUser = await getCurrentUser();
-        setUser(currentUser);
+        setUser(await getCurrentUser());
       } catch {
-        setUser(null);
+        try {
+          await refreshSession();
+          setUser(await getCurrentUser());
+        } catch {
+          setUser(null);
+        }
       } finally {
         setLoading(false);
       }

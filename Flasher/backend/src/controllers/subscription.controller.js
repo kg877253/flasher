@@ -50,6 +50,10 @@ const getUserChannelSubscribers = asyncHandler(async (req, res) => {
         throw new ApiError(404, "Channel not found")
     }
 
+    if (channelId !== req.user._id.toString()) {
+        throw new ApiError(403, "You can only view your own subscribers")
+    }
+
     const subscribers = await Subscription.aggregate([
         { $match: { channel: new mongoose.Types.ObjectId(channelId) } },
         {

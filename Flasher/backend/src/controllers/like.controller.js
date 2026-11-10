@@ -118,6 +118,7 @@ const getLikedVideos = asyncHandler(async (req, res) => {
                 as: "video",
                 pipeline: [
                     { $match: { isPublished: true } },
+                    { $project: { viewedBy: 0 } },
                     {
                         $lookup: {
                             from: "users",
