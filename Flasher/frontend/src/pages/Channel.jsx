@@ -118,7 +118,7 @@ const Channel = () => {
                     </p>
                 </div>
 
-                {!isOwnChannel && (
+                {user && !isOwnChannel && (
                     <div className="shrink-0">
                         <SpecularButton
                             size="lg"

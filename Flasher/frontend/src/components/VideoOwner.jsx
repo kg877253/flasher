@@ -69,7 +69,7 @@ export default function VideoOwner({ owner }) {
           </div>
         </Link>
 
-        {channel && !isOwnChannel && (
+        {channel && user && !isOwnChannel && (
           <button
             onClick={handleSubscribe}
             disabled={busy}

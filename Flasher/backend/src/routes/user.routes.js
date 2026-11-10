@@ -31,15 +31,17 @@ router.post('/register', upload.fields([     //middleware for uploading files
     }
 ]), registerUser) //T-Done
 router.post('/login', loginUser);//T-Done
-
-//secured routes
-router.post('/logout', verifyJWT, logoutUser); //T-Done
 router.post('/refresh-token', refreshAccessToken); //T-Done
+
+// Public discovery routes
+router.get('/search', searchUsers);
+router.get('/channel/:username', getUserChannelProfile); //T-Done (username-kartik)
+
+// Secured routes
+router.post('/logout', verifyJWT, logoutUser); //T-Done
 router.post('/change-password', verifyJWT, changeCurrentPassword); //T-Done
 
 router.get('/current-user', verifyJWT, getcurrentuser);//T-Done
-router.get('/search', verifyJWT, searchUsers);
-router.get('/channel/:username', verifyJWT, getUserChannelProfile); //T-Done (username-kartik)
 router.get('/watch-history', verifyJWT, getWatchHistory); //T-Done 
 
 router.patch('/update-account-details', verifyJWT, updateaccountdetails); //T-Done
