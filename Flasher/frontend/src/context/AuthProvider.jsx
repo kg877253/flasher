@@ -22,6 +22,19 @@ export default function AuthProvider({ children }) {
     fetchCurrentUser();
   }, []);
 
+  useEffect(() => {
+    const handleExpiredSession = () => {
+      setUser(null);
+
+      if (!["/login", "/register"].includes(window.location.pathname)) {
+        window.location.assign("/login");
+      }
+    };
+
+    window.addEventListener("auth:expired", handleExpiredSession);
+    return () => window.removeEventListener("auth:expired", handleExpiredSession);
+  }, []);
+
   const login = async (credentials) => {
     const data = await loginUser(credentials);
     setUser(data.user);

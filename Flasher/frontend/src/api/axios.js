@@ -15,7 +15,8 @@ api.interceptors.response.use(
     if (
       error.response?.status !== 401 ||
       request?._retry ||
-      request?.url?.includes("/users/refresh-token")
+      request?.url?.includes("/users/refresh-token") ||
+      request?.url?.includes("/users/current-user")
     ) {
       return Promise.reject(error);
     }
@@ -29,6 +30,7 @@ api.interceptors.response.use(
       return api(request);
     } catch (refreshError) {
       refreshing = null;
+      window.dispatchEvent(new Event("auth:expired"));
       return Promise.reject(refreshError);
     }
   }
