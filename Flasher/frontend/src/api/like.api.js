@@ -9,3 +9,8 @@ export const getLikedVideos = async () => {
   const res = await api.get("/likes/videos");
   return res.data.data;
 };
+
+export const toggleCommentLike = async (commentId) => {
+  const res = await api.post(`/likes/toggle/c/${commentId}`);
+  return res.data.data;
+};

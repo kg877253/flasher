@@ -34,6 +34,26 @@ const getVideoComments = asyncHandler(async (req, res) => {
         },
         {
             $addFields: { owner: { $first: "$owner" } }
+        },
+        {
+            $lookup: {
+                from: "likes",
+                let: { commentId: "$_id" },
+                pipeline: [
+                    { $match: { $expr: { $eq: ["$comment", "$$commentId"] } } },
+                    { $project: { likedBy: 1, _id: 0 } }
+                ],
+                as: "commentLikes"
+            }
+        },
+        {
+            $addFields: {
+                likesCount: { $size: "$commentLikes" },
+                isLiked: { $in: [req.user._id, "$commentLikes.likedBy"] }
+            }
+        },
+        {
+            $project: { commentLikes: 0 }
         }
     ])
 
@@ -112,7 +132,7 @@ const updateComment = asyncHandler(async (req, res) => {
     }
 
     const updatedComment = await Comment.findByIdAndUpdate(commentId,
-        { content: content },
+        { content: content.trim() },
         { returnDocument: "after" }
     )
 

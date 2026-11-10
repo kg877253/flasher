@@ -52,15 +52,17 @@ const toggleCommentLike = asyncHandler(async (req, res) => {
 
     if (alreadyLiked) {
         await Like.findByIdAndDelete(alreadyLiked._id)
+        const likesCount = await Like.countDocuments({ comment: commentId })
         return res
             .status(200)
-            .json(new ApiResponse(200, { isLiked: false }, "Comment unliked successfully"))
+            .json(new ApiResponse(200, { isLiked: false, likesCount }, "Comment unliked successfully"))
     }
 
     await Like.create({ comment: commentId, likedBy: req.user._id })
+    const likesCount = await Like.countDocuments({ comment: commentId })
     return res
         .status(200)
-        .json(new ApiResponse(200, { isLiked: true }, "Comment liked successfully"))
+        .json(new ApiResponse(200, { isLiked: true, likesCount }, "Comment liked successfully"))
 })
 
 const toggleTweetLike = asyncHandler(async (req, res) => {
