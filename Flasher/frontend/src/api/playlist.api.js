@@ -25,3 +25,14 @@ export const deletePlaylist = async (playlistId) => {
   const res = await api.delete(`/playlists/${playlistId}`);
   return res.data.data;
 };
+
+export const createPlaylist = async (data) => {
+  const res = await api.post("/playlists", data); // data: { name, description }
+  return res.data.data; // { _id, name, description, owner, videos: [] }
+};
+
+// Careful: the backend route order is videoId first, then playlistId
+export const addVideoToPlaylist = async (videoId, playlistId) => {
+  const res = await api.patch(`/playlists/add/${videoId}/${playlistId}`);
+  return res.data.data;
+};

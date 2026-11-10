@@ -12,6 +12,8 @@ import Playlist from "./pages/Playlist";
 import LikedVideos from "./pages/LikedVideos";
 import WatchHistory from "./pages/WatchHistory";
 import Subscribers from "./pages/Subscribers";
+import Collection from "./pages/Collection";
+import MyContent from "./pages/MyContent";
 
 const router = createBrowserRouter([
   {
@@ -38,6 +40,8 @@ const router = createBrowserRouter([
           { path: "liked", element: <LikedVideos /> },
           { path: "history", element: <WatchHistory /> },
           { path: "subscribers", element: <Subscribers /> },
+          { path: "collection", element: <Collection /> },
+          { path: "my-content", element: <MyContent /> },
 
           {
             path: "users/channel/:username",
