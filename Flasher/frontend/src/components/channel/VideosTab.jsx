@@ -104,11 +104,10 @@ export default function VideosTab({ channelId }) {
           <button
             key={s.id}
             onClick={() => setSortId(s.id)}
-            className={`cursor-pointer rounded-full px-3.5 py-1.5 text-sm font-medium transition active:scale-95 ${
-              sortId === s.id
+            className={`cursor-pointer rounded-full px-3.5 py-1.5 text-sm font-medium transition active:scale-95 ${sortId === s.id
                 ? "bg-white text-black"
                 : "bg-white/10 text-gray-200 hover:bg-white/20"
-            }`}
+              }`}
           >
             {s.label}
           </button>
