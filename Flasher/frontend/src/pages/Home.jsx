@@ -99,7 +99,7 @@ export default function Home() {
 
   if (videos.length === 0) {
     return (
-      <div className="mx-auto mt-20 max-w-2xl">
+      <div className="mx-auto mt-8 max-w-6xl">
         {query && channels.length > 0 ? (
           <ChannelResults channels={channels} query={query} />
         ) : (
@@ -141,23 +141,37 @@ export default function Home() {
 
 function ChannelResults({ channels, query }) {
   return (
-    <section className="mb-6">
-      <h2 className="mb-3 text-lg font-semibold">Channels matching "{query}"</h2>
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+    <section className="mb-8 overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03]">
+      <div className="relative border-b border-white/10 px-5 py-5 sm:px-6">
+        <div className="absolute -right-16 -top-24 h-48 w-48 rounded-full bg-purple-500/15 blur-3xl" />
+        <p className="relative text-xs font-medium uppercase tracking-[0.18em] text-purple-300">
+          People
+        </p>
+        <h2 className="relative mt-1 text-xl font-semibold">
+          Channels matching <span className="text-purple-300">"{query}"</span>
+        </h2>
+        <p className="relative mt-1 text-sm text-gray-400">
+          Find a creator and visit their channel.
+        </p>
+      </div>
+      <div className="grid gap-3 p-4 sm:grid-cols-2 sm:p-5 lg:grid-cols-3 xl:grid-cols-4">
         {channels.map((channel) => (
           <Link
             key={channel._id}
             to={`/users/channel/${channel.username}`}
-            className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/[0.03] p-3 transition hover:border-purple-400/40 hover:bg-white/[0.07]"
+            className="group flex min-h-24 items-center gap-4 rounded-xl border border-white/10 bg-black/20 p-4 outline-none transition duration-300 hover:-translate-y-0.5 hover:border-purple-400/50 hover:bg-white/[0.07] hover:shadow-lg hover:shadow-purple-950/20 focus-visible:ring-2 focus-visible:ring-purple-400"
           >
             <img
               src={channel.avatar}
               alt={channel.username}
-              className="h-12 w-12 shrink-0 rounded-full bg-gray-700 object-cover"
+              className="h-14 w-14 shrink-0 rounded-full bg-gray-700 object-cover ring-2 ring-white/10 transition group-hover:ring-purple-400/60"
             />
             <div className="min-w-0">
-              <p className="truncate font-semibold">{channel.fullname}</p>
+              <p className="truncate font-semibold transition-colors group-hover:text-purple-300">
+                {channel.fullname}
+              </p>
               <p className="truncate text-sm text-gray-400">@{channel.username}</p>
+              <p className="mt-1 text-xs text-gray-500">View channel →</p>
             </div>
           </Link>
         ))}
