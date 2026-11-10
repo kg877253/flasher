@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 import { getUserChannelProfile } from "../api/user.api";
 import { toggleSubscription } from "../api/subscription.api";
@@ -49,19 +50,24 @@ export default function VideoOwner({ owner }) {
   return (
     <div className="">
       <div className="flex items-center justify-between gap-3">
-        <div className="flex min-w-0 items-center gap-3">
+        <Link
+          to={`/users/channel/${owner.username}`}
+          className="flex min-w-0 items-center gap-3 rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-purple-400"
+        >
           <img
             src={owner.avatar}
             alt={owner.username}
             className="h-10 w-10 shrink-0 rounded-full bg-gray-700 object-cover"
           />
           <div className="min-w-0">
-            <p className="truncate font-medium">{owner.fullname}</p>
+            <p className="truncate font-medium transition-colors hover:text-purple-300">
+              {owner.fullname}
+            </p>
             <p className="text-sm text-gray-400">
               {channel ? formatSubscribers(channel.subscribersCount) : `@${owner.username}`}
             </p>
           </div>
-        </div>
+        </Link>
 
         {channel && !isOwnChannel && (
           <button

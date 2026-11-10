@@ -409,6 +409,28 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
         .json(new ApiResponse(200, channel[0], "Channel profile fetched successfully"))
 })
 
+const searchUsers = asyncHandler(async (req, res) => {
+    const query = req.query.query?.trim()
+    if (!query) {
+        return res.status(200).json(new ApiResponse(200, [], "Users fetched successfully"))
+    }
+
+    const safeQuery = query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+    const users = await User.find({
+        $or: [
+            { username: { $regex: safeQuery, $options: "i" } },
+            { fullname: { $regex: safeQuery, $options: "i" } }
+        ]
+    })
+        .select("username fullname avatar")
+        .sort({ fullname: 1 })
+        .limit(8)
+
+    return res
+        .status(200)
+        .json(new ApiResponse(200, users, "Users fetched successfully"))
+})
+
 
 const getWatchHistory = asyncHandler(async (req, res) => {
 
@@ -469,4 +491,4 @@ const getWatchHistory = asyncHandler(async (req, res) => {
 })
 
 
-export { registerUser, loginUser, logoutUser, refreshAccessToken, changeCurrentPassword, getcurrentuser, updateaccountdetails, updateuseravatar, updateusercoverimage, getUserChannelProfile, getWatchHistory }
+export { registerUser, loginUser, logoutUser, refreshAccessToken, changeCurrentPassword, getcurrentuser, updateaccountdetails, updateuseravatar, updateusercoverimage, getUserChannelProfile, searchUsers, getWatchHistory }

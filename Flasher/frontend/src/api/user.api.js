@@ -24,6 +24,11 @@ export const getUserChannelProfile = async (username) => {
   return res.data.data; // { fullname, username, avatar, subscribersCount, isSubscribed, ... }
 };
 
+export const searchUsers = async (query) => {
+  const res = await api.get("/users/search", { params: { query } });
+  return res.data.data;
+};
+
 export const getWatchHistory = async () => {
   const res = await api.get("/users/watch-history");
   return res.data.data;

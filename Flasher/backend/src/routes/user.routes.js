@@ -10,6 +10,7 @@ import {
     updateuseravatar,
     updateusercoverimage,
     getUserChannelProfile,
+    searchUsers,
     getWatchHistory
 } from "../controllers/user.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
@@ -37,6 +38,7 @@ router.post('/refresh-token', refreshAccessToken); //T-Done
 router.post('/change-password', verifyJWT, changeCurrentPassword); //T-Done
 
 router.get('/current-user', verifyJWT, getcurrentuser);//T-Done
+router.get('/search', verifyJWT, searchUsers);
 router.get('/channel/:username', verifyJWT, getUserChannelProfile); //T-Done (username-kartik)
 router.get('/watch-history', verifyJWT, getWatchHistory); //T-Done 
 
