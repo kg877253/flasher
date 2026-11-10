@@ -4,9 +4,9 @@ import SpecularButton from "./SpecularButton";
 import useAuth from "../hooks/useAuth.js";
 import Logo from "./Logo";
 import Dropdown, { DropdownItem, DropdownSeparator } from "./Dropdown";
-import { ChevronDownIcon, LogoutIcon, SettingsIcon, UserIcon } from "./Icons";
+import { ChevronDownIcon, LogoutIcon, MenuIcon, SettingsIcon, UserIcon } from "./Icons";
 
-export default function Navbar() {
+export default function Navbar({ onMenuClick }) {
   const { user, loading, logout } = useAuth();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -29,7 +29,17 @@ export default function Navbar() {
 
   return (
     <header className="sticky top-0 z-10 flex items-center justify-between gap-4 border-b border-gray-800 bg-black px-4 py-3">
-      <Logo />
+      <div className="flex shrink-0 items-center gap-2">
+        <button
+          type="button"
+          onClick={onMenuClick}
+          aria-label="Open navigation menu"
+          className="rounded-lg p-2 text-gray-300 hover:bg-white/10 md:hidden"
+        >
+          <MenuIcon size={22} />
+        </button>
+        <Logo />
+      </div>
 
       <form role="search" onSubmit={handleSearch} className="w-full max-w-xl">
         <input

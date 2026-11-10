@@ -113,6 +113,14 @@ export const CloseIcon = (props) => (
   </Icon>
 );
 
+export const MenuIcon = (props) => (
+  <Icon {...props}>
+    <path d="M4 6h16" />
+    <path d="M4 12h16" />
+    <path d="M4 18h16" />
+  </Icon>
+);
+
 export const PlayIcon = (props) => (
   <Icon {...props}>
     <polygon points="6 3 20 12 6 21 6 3" />
