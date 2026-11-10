@@ -5,4 +5,33 @@ const api = axios.create({
   withCredentials:true,
 });
 
+let refreshing = null;
+
+api.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const request = error.config;
+
+    if (
+      error.response?.status !== 401 ||
+      request?._retry ||
+      request?.url?.includes("/users/refresh-token")
+    ) {
+      return Promise.reject(error);
+    }
+
+    request._retry = true;
+
+    try {
+      refreshing ||= api.post("/users/refresh-token");
+      await refreshing;
+      refreshing = null;
+      return api(request);
+    } catch (refreshError) {
+      refreshing = null;
+      return Promise.reject(refreshError);
+    }
+  }
+);
+
 export default api;
