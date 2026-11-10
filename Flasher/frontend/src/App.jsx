@@ -32,6 +32,7 @@ const router = createBrowserRouter([
     children: [
       // Public
       { index: true, element: <Home /> },
+      { path: "users/channel/:username", element: <Channel /> },
 
       // Only for logged-in users
       {
@@ -47,10 +48,6 @@ const router = createBrowserRouter([
           { path: "settings", element: <Settings /> },
           { path: "support", element: <Support /> },
 
-          {
-            path: "users/channel/:username",
-            element: <Channel />,
-          }
           // more protected pages go here later
         ],
       },
