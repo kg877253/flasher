@@ -81,15 +81,17 @@ const toggleTweetLike = asyncHandler(async (req, res) => {
 
     if (alreadyLiked) {
         await Like.findByIdAndDelete(alreadyLiked._id)
+        const likesCount = await Like.countDocuments({ tweet: tweetId })
         return res
             .status(200)
-            .json(new ApiResponse(200, { isLiked: false }, "Tweet unliked successfully"))
+            .json(new ApiResponse(200, { isLiked: false, likesCount }, "Tweet unliked successfully"))
     }
 
     await Like.create({ tweet: tweetId, likedBy: req.user._id })
+    const likesCount = await Like.countDocuments({ tweet: tweetId })
     return res
         .status(200)
-        .json(new ApiResponse(200, { isLiked: true }, "Tweet liked successfully"))
+        .json(new ApiResponse(200, { isLiked: true, likesCount }, "Tweet liked successfully"))
 })
 
 const getLikedVideos = asyncHandler(async (req, res) => {
