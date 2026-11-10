@@ -14,6 +14,8 @@ import WatchHistory from "./pages/WatchHistory";
 import Subscribers from "./pages/Subscribers";
 import Collection from "./pages/Collection";
 import MyContent from "./pages/MyContent";
+import Settings from "./pages/Settings";
+import Support from "./pages/Support";
 
 const router = createBrowserRouter([
   {
@@ -42,6 +44,8 @@ const router = createBrowserRouter([
           { path: "subscribers", element: <Subscribers /> },
           { path: "collection", element: <Collection /> },
           { path: "my-content", element: <MyContent /> },
+          { path: "settings", element: <Settings /> },
+          { path: "support", element: <Support /> },
 
           {
             path: "users/channel/:username",

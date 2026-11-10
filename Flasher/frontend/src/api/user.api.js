@@ -28,3 +28,27 @@ export const getWatchHistory = async () => {
   const res = await api.get("/users/watch-history");
   return res.data.data;
 };
+
+export const changePassword = async (data) => {
+  const res = await api.post("/users/change-password", data);
+  return res.data.data;
+};
+
+export const updateAccountDetails = async (data) => {
+  const res = await api.patch("/users/update-account-details", data);
+  return res.data.data;
+};
+
+export const updateAvatar = async (file) => {
+  const formData = new FormData();
+  formData.append("avatar", file);
+  const res = await api.patch("/users/update-avatar", formData);
+  return res.data.data;
+};
+
+export const updateCoverImage = async (file) => {
+  const formData = new FormData();
+  formData.append("coverImage", file);
+  const res = await api.patch("/users/update-cover-image", formData);
+  return res.data.data;
+};
