@@ -1,10 +1,23 @@
 @import "tailwindcss";
 
+@import "@fontsource-variable/plus-jakarta-sans";
+
+@theme {
+  --font-sans: "Plus Jakarta Sans Variable", ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  body {
+    @apply antialiased;
+  }
+}
+
 @keyframes menu-in {
   from {
     opacity: 0;
     transform: scale(0.95);
   }
+
   to {
     opacity: 1;
     transform: scale(1);
@@ -21,6 +34,7 @@
     opacity: 0;
     transform: translateY(8px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -42,6 +56,7 @@
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -53,6 +68,39 @@
 
 @media (prefers-reduced-motion: reduce) {
   .fade-in {
+    animation: none;
+  }
+}
+
+
+/* Error message shake (auth pages) */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(5px); }
+  60% { transform: translateX(-3px); }
+  80% { transform: translateX(2px); }
+}
+
+.shake {
+  animation: shake 400ms ease-in-out;
+}
+
+/* Slow diagonal light band across the auth brand panel */
+@keyframes sweep {
+  0% { transform: translateX(-100%) skewX(-18deg); opacity: 0; }
+  15% { opacity: 1; }
+  55% { transform: translateX(400%) skewX(-18deg); opacity: 0; }
+  100% { transform: translateX(400%) skewX(-18deg); opacity: 0; }
+}
+
+.sweep {
+  animation: sweep 9s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shake,
+  .sweep {
     animation: none;
   }
 }

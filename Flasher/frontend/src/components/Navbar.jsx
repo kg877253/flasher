@@ -1,23 +1,14 @@
-import { useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import SpecularButton from "./SpecularButton";
 import useAuth from "../hooks/useAuth.js";
 import Logo from "./Logo";
+import NavSearch from "./NavSearch";
 import Dropdown, { DropdownItem, DropdownSeparator } from "./Dropdown";
 import { ChevronDownIcon, LogoutIcon, MenuIcon, SettingsIcon, UserIcon } from "./Icons";
 
 export default function Navbar({ onMenuClick }) {
   const { user, loading, logout } = useAuth();
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const [searchText, setSearchText] = useState(searchParams.get("query") || "");
-
-  const handleSearch = (e) => {
-    e.preventDefault();
-    const text = searchText.trim();
-    // encodeURIComponent keeps spaces and special characters safe in the URL
-    navigate(text ? `/?query=${encodeURIComponent(text)}` : "/");
-  };
 
   const handleLogout = async () => {
     try {
@@ -28,8 +19,8 @@ export default function Navbar({ onMenuClick }) {
   };
 
   return (
-    <header className="sticky top-0 z-10 flex items-center justify-between gap-4 border-b border-gray-800 bg-black px-4 py-3">
-      <div className="flex shrink-0 items-center gap-2">
+    <header className="sticky top-0 z-10 flex items-center gap-2 border-b border-gray-800 bg-black/80 px-3 py-3 backdrop-blur-md sm:px-4 md:gap-4">
+      <div className="flex shrink-0 items-center gap-1 sm:gap-2">
         <button
           type="button"
           onClick={onMenuClick}
@@ -41,15 +32,10 @@ export default function Navbar({ onMenuClick }) {
         <Logo />
       </div>
 
-      <form role="search" onSubmit={handleSearch} className="w-full max-w-xl">
-        <input
-          type="text"
-          value={searchText}
-          onChange={(e) => setSearchText(e.target.value)}
-          placeholder="Search"
-          className="w-full rounded-full border border-gray-700 bg-white/5 px-4 py-2 outline-none placeholder:text-gray-500 focus:border-purple-400"
-        />
-      </form>
+      {/* Desktop: centered bar. Mobile: icon pushed to the right */}
+      <div className="flex flex-1 justify-end md:justify-center">
+        <NavSearch />
+      </div>
 
       <div className="shrink-0">
         {loading ? (
@@ -90,38 +76,38 @@ export default function Navbar({ onMenuClick }) {
               Log out
             </DropdownItem>
           </Dropdown>
-        ) :  (
-        <div className="flex items-center gap-2">
-          {/* Login: glass button */}
-          <SpecularButton
-            size="sm"
-            radius={999}
-            lineColor="#ffffff"
-            baseColor="#737373"
-            followMouse
-            proximity={250}
-            onClick={() => navigate("/login")}
-          >
-            Login
-          </SpecularButton>
+        ) : (
+          <div className="flex items-center gap-2">
+            {/* Login: glass button */}
+            <SpecularButton
+              size="sm"
+              radius={999}
+              lineColor="#ffffff"
+              baseColor="#737373"
+              followMouse
+              proximity={250}
+              onClick={() => navigate("/login")}
+            >
+              Login
+            </SpecularButton>
 
-          {/* Sign Up: purple button */}
-          <SpecularButton
-            size="sm"
-            radius={999}
-            tint="#a855f7"
-            tintOpacity={0.85}
-            baseColor="#d8b4fe"
-            lineColor="#ffffff"
-            idleIntensity={0.45}
-            shineSize={12}
-            followMouse
-            proximity={250}
-            onClick={() => navigate("/register")}
-          >
-            Sign Up
-          </SpecularButton>
-        </div>
+            {/* Sign Up: purple button */}
+            <SpecularButton
+              size="sm"
+              radius={999}
+              tint="#a855f7"
+              tintOpacity={0.85}
+              baseColor="#d8b4fe"
+              lineColor="#ffffff"
+              idleIntensity={0.45}
+              shineSize={12}
+              followMouse
+              proximity={250}
+              onClick={() => navigate("/register")}
+            >
+              Sign Up
+            </SpecularButton>
+          </div>
         )}
       </div>
     </header>

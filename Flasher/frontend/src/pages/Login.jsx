@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
+import AuthLayout from "../components/auth/AuthLayout";
+import AuthField, { AuthButton, AuthError } from "../components/auth/AuthField";
+import { LockIcon, UserIcon } from "../components/Icons";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -37,39 +40,53 @@ export default function Login() {
     }
   };
 
-  const inputClass =
-    "w-full rounded-md border border-gray-500 bg-transparent px-3 py-2 outline-none focus:border-purple-400";
-
   return (
-    <div className="flex min-h-screen items-center justify-center bg-black text-white">
-      <form
-        onSubmit={handleSubmit}
-        className="flex w-full max-w-sm flex-col gap-4 rounded-lg border border-gray-700 p-6"
-      >
-        <h1 className="text-2xl font-bold">Login</h1>
+    <AuthLayout>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+        <div className="fade-up">
+          <h1 className="text-3xl font-extrabold tracking-tight">Welcome back</h1>
+          <p className="mt-2 text-sm text-gray-400">Log in to continue to Flasher.</p>
+        </div>
 
-        <input name="identifier" type="text" placeholder="Username or email"
-          value={form.identifier} onChange={handleChange} className={inputClass} required />
-        <input name="password" type="password" placeholder="Password"
-          value={form.password} onChange={handleChange} className={inputClass} required />
+        <AuthField
+          index={1}
+          icon={UserIcon}
+          label="Username or email"
+          name="identifier"
+          type="text"
+          placeholder="kartik or kartik@email.com"
+          autoComplete="username"
+          autoFocus
+          value={form.identifier}
+          onChange={handleChange}
+          required
+        />
+        <AuthField
+          index={2}
+          icon={LockIcon}
+          label="Password"
+          name="password"
+          type="password"
+          placeholder="Your password"
+          autoComplete="current-password"
+          value={form.password}
+          onChange={handleChange}
+          required
+        />
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="rounded-md bg-purple-500 py-2 font-semibold hover:bg-purple-600 disabled:cursor-not-allowed disabled:opacity-60"
-        >
-          {loading ? "Logging in..." : "Login"}
-        </button>
+        <AuthError message={error} />
 
-        {error && <p className="text-sm text-red-500">{error}</p>}
+        <AuthButton index={3} loading={loading} loadingText="Logging in...">
+          Login
+        </AuthButton>
 
-        <p className="text-sm text-gray-400">
+        <p className="fade-up text-sm text-gray-400" style={{ animationDelay: "280ms" }}>
           Don't have an account?{" "}
-          <Link to="/register" className="text-purple-400 hover:underline">
+          <Link to="/register" className="font-medium text-purple-400 hover:underline">
             Sign up
           </Link>
         </p>
       </form>
-    </div>
+    </AuthLayout>
   );
 }

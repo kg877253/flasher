@@ -1,6 +1,10 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { registerUser } from "../api/user.api";
+import AuthLayout from "../components/auth/AuthLayout";
+import AuthField, { AuthButton, AuthError } from "../components/auth/AuthField";
+import { AvatarPicker, CoverPicker } from "../components/auth/ImagePickers";
+import { AtIcon, CheckIcon, LockIcon, MailIcon, UserIcon } from "../components/Icons";
 
 export default function SignUp() {
   const navigate = useNavigate();
@@ -41,53 +45,102 @@ export default function SignUp() {
     }
   };
 
-  const inputClass =
-    "w-full rounded-md border border-gray-500 bg-transparent px-3 py-2 outline-none focus:border-purple-400";
-  const fileClass =
-    "w-full text-sm text-gray-300 file:mr-3 file:rounded-md file:border-0 file:bg-purple-500 file:px-3 file:py-1 file:text-white";
+  // The backend stores usernames in lowercase
+  const usernamePreview = form.username.trim().toLowerCase() || "username";
+  const passwordOk = form.password.length >= 8;
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-black py-10 text-white">
-      <form
-        onSubmit={handleSubmit}
-        className="flex w-full max-w-sm flex-col gap-4 rounded-lg border border-gray-700 p-6"
-      >
-        <h1 className="text-2xl font-bold">Sign Up</h1>
+    <AuthLayout>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+        <div className="fade-up">
+          <h1 className="text-3xl font-extrabold tracking-tight">Create your channel</h1>
+          <p className="mt-2 text-sm text-gray-400">
+            Pick a photo and a username, and you are in.
+          </p>
+        </div>
 
-        <input name="fullname" type="text" placeholder="Full name"
-          value={form.fullname} onChange={handleChange} className={inputClass} required />
-        <input name="username" type="text" placeholder="Username"
-          value={form.username} onChange={handleChange} className={inputClass} required />
-        <input name="email" type="email" placeholder="Email"
-          value={form.email} onChange={handleChange} className={inputClass} required />
-        <input name="password" type="password" placeholder="Password"
-          value={form.password} onChange={handleChange} className={inputClass} required />
+        <AvatarPicker index={1} onChange={setAvatar} invalid={!!error && !avatar} />
 
-        <label className="text-sm text-gray-400">Avatar (required)</label>
-        <input type="file" accept="image/*"
-          onChange={(e) => setAvatar(e.target.files[0])} className={fileClass} />
+        <AuthField
+          index={2}
+          icon={UserIcon}
+          label="Full name"
+          name="fullname"
+          type="text"
+          placeholder="Kartik Gupta"
+          autoComplete="name"
+          value={form.fullname}
+          onChange={handleChange}
+          required
+        />
+        <AuthField
+          index={3}
+          icon={AtIcon}
+          label="Username"
+          name="username"
+          type="text"
+          placeholder="kartik"
+          autoComplete="username"
+          value={form.username}
+          onChange={handleChange}
+          required
+          hint={
+            <p className="mt-1.5 truncate text-xs text-gray-500">
+              {window.location.host}/users/channel/
+              <span className="text-purple-300">{usernamePreview}</span>
+            </p>
+          }
+        />
+        <AuthField
+          index={4}
+          icon={MailIcon}
+          label="Email"
+          name="email"
+          type="email"
+          placeholder="you@email.com"
+          autoComplete="email"
+          value={form.email}
+          onChange={handleChange}
+          required
+        />
+        <AuthField
+          index={5}
+          icon={LockIcon}
+          label="Password"
+          name="password"
+          type="password"
+          placeholder="Create a password"
+          autoComplete="new-password"
+          value={form.password}
+          onChange={handleChange}
+          required
+          hint={
+            <p
+              className={`mt-1.5 flex items-center gap-1.5 text-xs transition-colors ${
+                passwordOk ? "text-green-400" : "text-gray-500"
+              }`}
+            >
+              <CheckIcon size={14} />
+              At least 8 characters
+            </p>
+          }
+        />
 
-        <label className="text-sm text-gray-400">Cover image (optional)</label>
-        <input type="file" accept="image/*"
-          onChange={(e) => setCoverImage(e.target.files[0])} className={fileClass} />
+        <CoverPicker index={6} onChange={setCoverImage} />
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="rounded-md bg-purple-500 py-2 font-semibold hover:bg-purple-600 disabled:cursor-not-allowed disabled:opacity-60"
-        >
-          {loading ? "Creating account..." : "Sign Up"}
-        </button>
+        <AuthError message={error} />
 
-        {error && <p className="text-sm text-red-500">{error}</p>}
+        <AuthButton index={7} loading={loading} loadingText="Creating account...">
+          Sign Up
+        </AuthButton>
 
-        <p className="text-sm text-gray-400">
+        <p className="fade-up text-sm text-gray-400" style={{ animationDelay: "560ms" }}>
           Already have an account?{" "}
-          <Link to="/login" className="text-purple-400 hover:underline">
+          <Link to="/login" className="font-medium text-purple-400 hover:underline">
             Login
           </Link>
         </p>
       </form>
-    </div>
+    </AuthLayout>
   );
 }
