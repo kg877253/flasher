@@ -13,7 +13,6 @@ router.get("/u/:subscriberId", getSubscribedChannels); // Public: channels a use
 router.use(verifyJWT); // Apply verifyJWT middleware to all routes in this file
 
 router.post("/c/:channelId", toggleSubscription); //T-Done
-router.get("/u/:subscriberId", getSubscribedChannels); //T-Done
 
 router.route("/c/:channelId").get(getUserChannelSubscribers); //T-Done
 

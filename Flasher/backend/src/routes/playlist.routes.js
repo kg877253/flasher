@@ -16,8 +16,6 @@ router.get("/user/:userId", getUserPlaylists); // Public: playlists of a channel
 router.use(verifyJWT);
 
 router.post("/", createPlaylist) //T-Done
-
-router.get("/user/:userId", getUserPlaylists); //T-Done
 router.get("/:playlistId", getPlaylistById) //T-Done
 
 router.patch("/add/:videoId/:playlistId", addVideoToPlaylist);//T-Done
