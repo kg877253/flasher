@@ -83,4 +83,4 @@ Build the frontend (`npm run build` in `frontend`), then start the backend with 
 
 ## Author
 
-**Kartik Gupta** · [GitHub](https://github.com/kg877253) · [LinkedIn](https://linkedin.com/in/kartikgupta8)
+**Kartik Gupta** · [GitHub](https://github.com/kg877253) · [LinkedIn](https://linkedin.com/in/kartik-gupta-a5073733a)
