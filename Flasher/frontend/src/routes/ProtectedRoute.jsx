@@ -1,5 +1,6 @@
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
+import VideoCardSkeleton from "../components/VideoCardSkeleton";
 
 export default function ProtectedRoute() {
   const { user, loading } = useAuth();
@@ -7,7 +8,13 @@ export default function ProtectedRoute() {
 
   // Wait for the current-user check before deciding anything
   if (loading) {
-    return <p className="p-4 text-gray-400">Loading...</p>;
+    return (
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        {Array.from({ length: 8 }, (_, i) => (
+          <VideoCardSkeleton key={i} />
+        ))}
+      </div>
+    );
   }
 
   // Not logged in: go to login and remember where the user wanted to go

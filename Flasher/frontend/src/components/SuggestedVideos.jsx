@@ -23,7 +23,20 @@ export default function SuggestedVideos({ currentVideoId }) {
   }, []);
 
   if (loading) {
-    return <p className="text-gray-400">Loading...</p>;
+    return (
+      <div className="flex animate-pulse flex-col gap-4">
+        {Array.from({ length: 5 }, (_, i) => (
+          <div key={i} className="flex items-start gap-3">
+            <div className="aspect-video w-44 shrink-0 rounded-lg bg-gray-800" />
+            <div className="min-w-0 flex-1 space-y-2 pt-1">
+              <div className="h-4 w-full rounded bg-gray-800" />
+              <div className="h-3 w-2/3 rounded bg-gray-800" />
+              <div className="h-3 w-1/2 rounded bg-gray-800" />
+            </div>
+          </div>
+        ))}
+      </div>
+    );
   }
 
   // Remove the video that is already playing

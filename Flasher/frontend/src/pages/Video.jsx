@@ -32,7 +32,58 @@ export default function Video() {
     fetchVideo();
   }, [id]);
 
-  if (loading) return <p className="text-gray-400">Loading...</p>;
+  if (loading)
+    return (
+      <div className="grid animate-pulse grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_400px]">
+        <div className="min-w-0">
+          <div className="aspect-video w-full rounded-xl bg-gray-800" />
+          <div className="mt-3 h-6 w-3/4 rounded bg-gray-800" />
+          <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
+            <div className="flex items-center gap-2">
+              <div className="h-10 w-10 rounded-full bg-gray-800" />
+              <div className="space-y-2">
+                <div className="h-4 w-32 rounded bg-gray-800" />
+                <div className="h-3 w-20 rounded bg-gray-800" />
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="h-9 w-20 rounded-full bg-gray-800" />
+              <div className="h-9 w-20 rounded-full bg-gray-800" />
+            </div>
+          </div>
+          <div className="mt-4 space-y-2 rounded-xl bg-white/5 p-3">
+            <div className="h-4 w-1/3 rounded bg-gray-800" />
+            <div className="h-3 w-full rounded bg-gray-800" />
+            <div className="h-3 w-2/3 rounded bg-gray-800" />
+          </div>
+          <div className="mt-6 space-y-4">
+            {[0, 1].map((i) => (
+              <div key={i} className="flex gap-3">
+                <div className="h-9 w-9 shrink-0 rounded-full bg-gray-800" />
+                <div className="flex-1 space-y-2">
+                  <div className="h-3 w-24 rounded bg-gray-800" />
+                  <div className="h-3 w-full rounded bg-gray-800" />
+                  <div className="h-3 w-3/4 rounded bg-gray-800" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="min-w-0 space-y-4">
+          {[0, 1, 2, 3].map((i) => (
+            <div key={i} className="flex gap-3">
+              <div className="aspect-video w-40 shrink-0 rounded-lg bg-gray-800" />
+              <div className="flex-1 space-y-2 pt-1">
+                <div className="h-4 w-full rounded bg-gray-800" />
+                <div className="h-3 w-2/3 rounded bg-gray-800" />
+                <div className="h-3 w-1/2 rounded bg-gray-800" />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+
   if (error) return <p className="text-red-400">{error}</p>;
 
   return (
@@ -51,12 +102,12 @@ export default function Video() {
         <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
           <VideoOwner owner={video.owner} />
           <div className="flex items-center gap-2">
-          <LikeButton
-            videoId={video._id}
-            initialLiked={video.isLiked}
-            initialCount={video.likesCount}
-          />
-          <SaveToPlaylist videoId={video._id} />
+            <LikeButton
+              videoId={video._id}
+              initialLiked={video.isLiked}
+              initialCount={video.likesCount}
+            />
+            <SaveToPlaylist videoId={video._id} />
           </div>
         </div>
 

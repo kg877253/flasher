@@ -191,8 +191,20 @@ export default function Comments({ videoId }) {
 
       {/* Comment list */}
       {loading ? (
-        <p className="mt-6 text-gray-400">Loading comments...</p>
+        <div className="mt-6 animate-pulse space-y-5">
+          {[0, 1, 2].map((i) => (
+            <div key={i} className="flex gap-3">
+              <div className="h-9 w-9 shrink-0 rounded-full bg-gray-800" />
+              <div className="flex-1 space-y-2">
+                <div className="h-3 w-24 rounded bg-gray-800" />
+                <div className="h-3 w-full rounded bg-gray-800" />
+                <div className="h-3 w-3/4 rounded bg-gray-800" />
+              </div>
+            </div>
+          ))}
+        </div>
       ) : comments.length === 0 ? (
+
         <p className="mt-6 text-gray-400">No comments yet. Be the first one!</p>
       ) : (
         <ul className="mt-6 space-y-5">
@@ -200,86 +212,85 @@ export default function Comments({ videoId }) {
             const isOwner = user?._id === comment.owner?._id;
             const isEditing = editingId === comment._id;
             return (
-            <li key={comment._id} className="flex gap-3">
-              <img
-                src={comment.owner?.avatar}
-                alt={comment.owner?.username}
-                className="h-10 w-10 shrink-0 rounded-full bg-gray-700 object-cover"
-              />
-              <div className="min-w-0 flex-1">
-                <p className="text-sm">
-                  <span className="font-medium">@{comment.owner?.username}</span>{" "}
-                  <span className="text-gray-400">{timeAgo(comment.createdAt)}</span>
-                </p>
-                {isEditing ? (
-                  <div className="mt-2">
-                    <input
-                      autoFocus
-                      value={editText}
-                      onChange={(event) => setEditText(event.target.value)}
-                      className="w-full border-b border-gray-600 bg-transparent pb-1 outline-none focus:border-white"
-                    />
-                    <div className="mt-2 flex gap-2">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setEditingId(null);
-                          setEditText("");
-                        }}
-                        className="rounded-full px-3 py-1 text-xs hover:bg-white/10"
-                      >
-                        Cancel
-                      </button>
-                      <button
-                        type="button"
-                        disabled={busyId === comment._id || !editText.trim()}
-                        onClick={() => handleEdit(comment._id)}
-                        className="rounded-full bg-purple-500 px-3 py-1 text-xs font-medium disabled:opacity-50"
-                      >
-                        {busyId === comment._id ? "Saving..." : "Save"}
-                      </button>
+              <li key={comment._id} className="flex gap-3">
+                <img
+                  src={comment.owner?.avatar}
+                  alt={comment.owner?.username}
+                  className="h-10 w-10 shrink-0 rounded-full bg-gray-700 object-cover"
+                />
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm">
+                    <span className="font-medium">@{comment.owner?.username}</span>{" "}
+                    <span className="text-gray-400">{timeAgo(comment.createdAt)}</span>
+                  </p>
+                  {isEditing ? (
+                    <div className="mt-2">
+                      <input
+                        autoFocus
+                        value={editText}
+                        onChange={(event) => setEditText(event.target.value)}
+                        className="w-full border-b border-gray-600 bg-transparent pb-1 outline-none focus:border-white"
+                      />
+                      <div className="mt-2 flex gap-2">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setEditingId(null);
+                            setEditText("");
+                          }}
+                          className="rounded-full px-3 py-1 text-xs hover:bg-white/10"
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          type="button"
+                          disabled={busyId === comment._id || !editText.trim()}
+                          onClick={() => handleEdit(comment._id)}
+                          className="rounded-full bg-purple-500 px-3 py-1 text-xs font-medium disabled:opacity-50"
+                        >
+                          {busyId === comment._id ? "Saving..." : "Save"}
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                ) : (
-                  <p className="mt-1 whitespace-pre-line break-words">{comment.content}</p>
-                )}
-                <div className="mt-2 flex items-center gap-3 text-xs text-gray-400">
-                  <button
-                    type="button"
-                    onClick={() => handleLike(comment._id)}
-                    disabled={busyId === comment._id}
-                    className={`inline-flex cursor-pointer items-center gap-1 transition hover:text-white ${
-                      comment.isLiked ? "text-purple-300" : ""
-                    }`}
-                  >
-                    <LikeIcon size={15} />
-                    {comment.likesCount || 0}
-                  </button>
-                  {isOwner && !isEditing && (
-                    <>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setEditingId(comment._id);
-                          setEditText(comment.content);
-                        }}
-                        className="inline-flex cursor-pointer items-center gap-1 hover:text-white"
-                      >
-                        <PencilIcon size={14} /> Edit
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => handleDelete(comment._id)}
-                        disabled={busyId === comment._id}
-                        className="inline-flex cursor-pointer items-center gap-1 hover:text-red-300 disabled:opacity-50"
-                      >
-                        <TrashIcon size={14} /> Delete
-                      </button>
-                    </>
+                  ) : (
+                    <p className="mt-1 whitespace-pre-line break-words">{comment.content}</p>
                   )}
+                  <div className="mt-2 flex items-center gap-3 text-xs text-gray-400">
+                    <button
+                      type="button"
+                      onClick={() => handleLike(comment._id)}
+                      disabled={busyId === comment._id}
+                      className={`inline-flex cursor-pointer items-center gap-1 transition hover:text-white ${comment.isLiked ? "text-purple-300" : ""
+                        }`}
+                    >
+                      <LikeIcon size={15} />
+                      {comment.likesCount || 0}
+                    </button>
+                    {isOwner && !isEditing && (
+                      <>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setEditingId(comment._id);
+                            setEditText(comment.content);
+                          }}
+                          className="inline-flex cursor-pointer items-center gap-1 hover:text-white"
+                        >
+                          <PencilIcon size={14} /> Edit
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleDelete(comment._id)}
+                          disabled={busyId === comment._id}
+                          className="inline-flex cursor-pointer items-center gap-1 hover:text-red-300 disabled:opacity-50"
+                        >
+                          <TrashIcon size={14} /> Delete
+                        </button>
+                      </>
+                    )}
+                  </div>
                 </div>
-              </div>
-            </li>
+              </li>
             );
           })}
         </ul>
