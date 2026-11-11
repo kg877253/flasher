@@ -11,6 +11,7 @@ import {
 import { verifyJWT } from "../middlewares/auth.middleware.js"
 
 const router = Router();
+router.get("/user/:userId", getUserPlaylists); // Public: playlists of a channel
 
 router.use(verifyJWT);
 
