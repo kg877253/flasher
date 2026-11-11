@@ -42,16 +42,17 @@
 ## Project structure
 
 ```
-Flasher/
 ├── backend/    # Express API (controllers, models, routes, middlewares)
-└── frontend/   # React app (pages, components, api, context)
+├── frontend/   # React app (pages, components, api, context)
+├── docs/       # README screenshots and logo
+└── README.md
 ```
 
 ## Run locally
 
 ```bash
 git clone https://github.com/kg877253/flasher.git
-cd flasher/Flasher
+cd flasher
 
 # Backend (http://localhost:8000)
 cd backend
