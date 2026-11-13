@@ -1,5 +1,4 @@
 // Top of a library page: icon + big title on the left, numbers and the main action on the right
-// stats: [{ value, label }]
 export default function PageHeader({ icon: Icon, title, subtitle, stats = [], actions }) {
   return (
     <header className="relative flex flex-col gap-6 border-b border-white/10 pb-6 lg:flex-row lg:items-end lg:justify-between">
