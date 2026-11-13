@@ -12,7 +12,7 @@ function GoogleLogo({ className = "" }) {
   );
 }
 
-export default function GoogleButton({ onCredential, onError, text = "continue_with" }) {
+function GoogleButtonInner({ onCredential, onError, text = "continue_with" }) {
   const [busy, setBusy] = useState(false);
   const label = text === "signup_with" ? "Sign up with Google" : "Continue with Google";
 
@@ -56,7 +56,14 @@ export default function GoogleButton({ onCredential, onError, text = "continue_w
   );
 }
 
+export default function GoogleButton(props) {
+  // Without a client id the Google script crashes the whole page, so hide the button instead
+  if (!import.meta.env.VITE_GOOGLE_CLIENT_ID) return null;
+  return <GoogleButtonInner {...props} />;
+}
+
 export function OrDivider() {
+  if (!import.meta.env.VITE_GOOGLE_CLIENT_ID) return null;
   return (
     <div className="fade-up flex items-center gap-3 text-xs uppercase tracking-wider text-gray-500">
       <span className="h-px flex-1 bg-white/10" />
