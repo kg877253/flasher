@@ -4,12 +4,13 @@ import useAuth from "../hooks/useAuth";
 import AuthLayout from "../components/auth/AuthLayout";
 import AuthField, { AuthButton, AuthError } from "../components/auth/AuthField";
 import { LockIcon, UserIcon } from "../components/Icons";
+import GoogleButton, { OrDivider } from "../components/auth/GoogleButton";
 
 export default function Login() {
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || "/";
-  const { login } = useAuth();
+  const { login, loginWithGoogle } = useAuth();
   const [form, setForm] = useState({ identifier: "", password: "" });
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -40,6 +41,16 @@ export default function Login() {
     }
   };
 
+  const handleGoogle = async (credential) => {
+    setError(null);
+    try {
+      await loginWithGoogle(credential);
+      navigate(from, { replace: true });
+    } catch (err) {
+      setError(err.response?.data?.message || "Google sign-in failed");
+    }
+  };
+
   return (
     <AuthLayout>
       <form onSubmit={handleSubmit} className="flex flex-col gap-5">
@@ -47,6 +58,14 @@ export default function Login() {
           <h1 className="text-3xl font-extrabold tracking-tight">Welcome back</h1>
           <p className="mt-2 text-sm text-gray-400">Log in to continue to Flasher.</p>
         </div>
+        <div className="fade-up" style={{ animationDelay: "70ms" }}>
+          <GoogleButton
+            text="continue_with"
+            onCredential={handleGoogle}
+            onError={() => setError("Google sign-in failed")}
+          />
+        </div>
+        <OrDivider />
 
         <AuthField
           index={1}

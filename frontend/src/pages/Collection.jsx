@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import useAuth from "../hooks/useAuth";
 import { getUserPlaylists } from "../api/playlist.api";
 import { FolderIcon, PlusIcon, SearchIcon } from "../components/Icons";
-import PageHeader from "../components/PageHeader";
+import PageHeader, { PageHeaderSkeleton } from "../components/PageHeader";
 import SearchInput from "../components/SearchInput";
 import SegmentedControl from "../components/SegmentedControl";
 import PurpleButton from "../components/PurpleButton";
@@ -86,7 +86,7 @@ export default function Collection() {
   if (loading) {
     return (
       <div className="mx-auto max-w-6xl animate-pulse">
-        <div className="h-44 rounded-2xl bg-white/10" />
+        <PageHeaderSkeleton />
         <div className="mt-6 h-10 w-full rounded-full bg-white/10 sm:w-80" />
         <div className={`mt-6 ${grid}`}>
           {Array.from({ length: 4 }, (_, index) => (
@@ -119,13 +119,12 @@ export default function Collection() {
     <div className="fade-up mx-auto max-w-6xl">
       <PageHeader
         icon={FolderIcon}
-        eyebrow="Your library"
         title="Collection"
-        description="Playlists you created to group your favourite videos in one place."
         stats={[
           { value: playlists.length, label: playlists.length === 1 ? "playlist" : "playlists" },
           { value: totalVideos, label: totalVideos === 1 ? "video" : "videos" },
         ]}
+        actions={playlists.length > 0 ? newPlaylistButton : null}
       />
 
       {playlists.length === 0 ? (
@@ -138,23 +137,20 @@ export default function Collection() {
         </EmptyState>
       ) : (
         <>
-          <div className="mt-6 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+          <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <SearchInput
               value={query}
               onChange={setQuery}
               placeholder="Search playlists..."
-              className="lg:w-80"
+              className="sm:w-80"
             />
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-              <SegmentedControl
-                label="Sort playlists"
-                options={SORTS}
-                value={sortId}
-                onChange={setSortId}
-                className="sm:w-48"
-              />
-              {newPlaylistButton}
-            </div>
+            <SegmentedControl
+              label="Sort playlists"
+              options={SORTS}
+              value={sortId}
+              onChange={setSortId}
+              className="sm:w-48"
+            />
           </div>
 
           {query && (

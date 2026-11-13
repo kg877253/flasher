@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
     registerUser,
     loginUser,
+    googleAuth,
     logoutUser,
     refreshAccessToken,
     changeCurrentPassword,
@@ -31,6 +32,7 @@ router.post('/register', upload.fields([     //middleware for uploading files
     }
 ]), registerUser) //T-Done
 router.post('/login', loginUser);//T-Done
+router.post('/google', googleAuth);
 router.post('/refresh-token', refreshAccessToken); //T-Done
 
 // Public discovery routes

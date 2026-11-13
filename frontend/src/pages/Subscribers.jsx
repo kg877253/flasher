@@ -107,9 +107,7 @@ export default function Subscribers() {
     <div className="fade-up mx-auto max-w-6xl">
       <PageHeader
         icon={SubscribersIcon}
-        eyebrow="Your community"
         title="Subscribers"
-        description="People who chose to follow your channel and keep up with your content."
         stats={[
           { value: subscribers.length, label: subscribers.length === 1 ? "subscriber" : "subscribers" },
           { value: `+${newThisWeek}`, label: "this week" },

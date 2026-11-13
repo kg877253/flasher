@@ -1,32 +1,48 @@
-// The hero block at the top of library pages (Liked videos, History, Subscribers)
+// Top of a library page: icon + big title on the left, numbers and the main action on the right
 // stats: [{ value, label }]
-export default function PageHeader({ icon: Icon, eyebrow, title, description, stats = [] }) {
+export default function PageHeader({ icon: Icon, title, subtitle, stats = [], actions }) {
   return (
-    <section className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] p-6 shadow-xl shadow-black/20 sm:p-8">
-      <div className="absolute -right-20 -top-24 h-64 w-64 rounded-full bg-purple-500/10 blur-3xl" />
-      <div className="relative flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
-        <div className="flex items-start gap-4">
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-purple-500/15 text-purple-300">
-            <Icon size={25} />
-          </div>
-          <div>
-            <p className="text-sm font-medium uppercase tracking-[0.18em] text-purple-300">{eyebrow}</p>
-            <h1 className="mt-1 text-3xl font-bold tracking-tight">{title}</h1>
-            <p className="mt-2 max-w-xl text-sm leading-6 text-gray-400">{description}</p>
-          </div>
-        </div>
+    <header className="relative flex flex-col gap-6 border-b border-white/10 pb-6 lg:flex-row lg:items-end lg:justify-between">
+      {/* Slanted accent on the divider, same angle as the logo cut */}
+      <span
+        aria-hidden="true"
+        className="absolute -bottom-px left-0 h-0.5 w-28 -skew-x-35 bg-purple-400"
+      />
 
-        {stats.length > 0 && (
-          <div className="flex gap-6 border-t border-white/10 pt-4 sm:border-l sm:border-t-0 sm:pl-6 sm:pt-0">
-            {stats.map((stat) => (
-              <div key={stat.label}>
-                <p className="text-2xl font-semibold">{stat.value}</p>
-                <p className="text-sm text-gray-500">{stat.label}</p>
-              </div>
-            ))}
-          </div>
-        )}
+      <div className="flex min-w-0 items-center gap-4">
+        {Icon && <Icon size={40} className="hidden shrink-0 text-purple-300 sm:block" />}
+        <div className="min-w-0">
+          <h1 className="text-2xl font-extrabold leading-tight tracking-tight sm:text-3xl">
+            {title}
+          </h1>
+          {subtitle && <p className="mt-2 text-sm text-gray-400">{subtitle}</p>}
+        </div>
       </div>
-    </section>
+
+      {(stats.length > 0 || actions) && (
+        <div className="flex flex-wrap items-end gap-x-8 gap-y-4">
+          {stats.length > 0 && (
+            <div className="flex gap-8 lg:border-l lg:border-white/10 lg:pl-8">
+              {stats.map((stat) => (
+                <div key={stat.label}>
+                  <p className="text-3xl font-bold tabular-nums tracking-tight">{stat.value}</p>
+                  <p className="text-sm text-gray-500">{stat.label}</p>
+                </div>
+              ))}
+            </div>
+          )}
+          {actions}
+        </div>
+      )}
+    </header>
+  );
+}
+
+export function PageHeaderSkeleton() {
+  return (
+    <div className="border-b border-white/10 pb-6">
+      <div className="h-10 w-64 rounded bg-white/10 sm:h-12" />
+      <div className="mt-3 h-4 w-32 rounded bg-white/10" />
+    </div>
   );
 }

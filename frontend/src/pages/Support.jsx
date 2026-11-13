@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import { ChevronDownIcon, SupportIcon } from "../components/Icons";
 import PageHeader from "../components/PageHeader";
 
@@ -26,50 +25,37 @@ export default function Support() {
     <div className="fade-up mx-auto max-w-5xl">
       <PageHeader
         icon={SupportIcon}
-        eyebrow="Help center"
-        title="How can we help?"
-        description="Find quick answers about uploading, playlists, your channel and account."
+        title="Help center"
+        subtitle="Answers to common questions about Flasher."
       />
 
-      <div className="mt-6 grid gap-6 lg:grid-cols-[minmax(0,1fr)_300px]">
-        <section className="space-y-3">
-          <h2 className="px-1 text-lg font-semibold">Frequently asked questions</h2>
+      <div className="mt-8 grid gap-10 lg:grid-cols-[minmax(0,1fr)_260px]">
+        <section className="divide-y divide-white/10 border-y border-white/10">
           {FAQS.map((faq) => (
-            <details
-              key={faq.question}
-              className="group rounded-2xl border border-white/10 bg-white/[0.03] transition hover:border-white/20"
-            >
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 p-4 font-medium marker:hidden">
+            <details key={faq.question} className="group">
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-4 font-medium marker:hidden">
                 {faq.question}
                 <ChevronDownIcon
                   size={18}
-                  className="shrink-0 text-gray-400 transition-transform group-open:rotate-180"
+                  className="shrink-0 text-gray-500 transition-transform duration-200 group-open:rotate-180"
                 />
               </summary>
-              <p className="border-t border-white/10 px-4 pb-4 pt-3 text-sm leading-6 text-gray-400">
-                {faq.answer}
-              </p>
+              <p className="pb-5 text-sm leading-6 text-gray-400">{faq.answer}</p>
             </details>
           ))}
         </section>
 
-        <aside className="h-fit rounded-2xl border border-purple-400/20 bg-purple-500/10 p-5">
-          <h2 className="text-lg font-semibold">Still need help?</h2>
-          <p className="mt-2 text-sm leading-6 text-gray-300">
-            Tell us what went wrong and we will help you get back to creating.
+        <aside className="h-fit lg:sticky lg:top-4">
+          <h2 className="font-semibold">Still need help?</h2>
+          <p className="mt-1 text-sm leading-6 text-gray-400">
+            Send us the page link and what went wrong. We will take a look.
           </p>
           <a
             href="mailto:kg877253@gmail.com?subject=Flasher%20support"
-            className="mt-5 inline-flex w-full items-center justify-center rounded-full bg-white px-4 py-2.5 text-sm font-semibold text-black transition hover:bg-gray-200"
+            className="mt-4 inline-flex rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-black transition hover:bg-gray-200 active:scale-95"
           >
-            Contact support
+            Email support
           </a>
-          <Link
-            to="/"
-            className="mt-2 inline-flex w-full items-center justify-center rounded-full border border-white/15 px-4 py-2.5 text-sm font-medium transition hover:bg-white/10"
-          >
-            Back to home
-          </Link>
         </aside>
       </div>
     </div>

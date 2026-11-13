@@ -46,4 +46,14 @@ const deleteFromCloudinary = async (fileUrl, resourceType = "image") => {
     }
 }
 
-export { uploadToCloudinary, deleteFromCloudinary }
+const uploadRemoteToCloudinary = async (remoteUrl) => {
+    try {
+        const response = await cloudinary.uploader.upload(remoteUrl, { resource_type: "image" });
+        return { ...response, url: response.secure_url };
+    } catch (error) {
+        console.log("Cloudinary remote upload failed:", error.message);
+        return null;
+    }
+}
+
+export { uploadToCloudinary, deleteFromCloudinary , uploadRemoteToCloudinary };

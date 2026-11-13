@@ -12,7 +12,7 @@ import {
   UploadIcon,
   VideoIcon,
 } from "../components/Icons";
-import PageHeader from "../components/PageHeader";
+import PageHeader, { PageHeaderSkeleton } from "../components/PageHeader";
 import PurpleButton from "../components/PurpleButton";
 import SearchInput from "../components/SearchInput";
 import SegmentedControl from "../components/SegmentedControl";
@@ -23,10 +23,10 @@ import DeleteVideoModal from "../components/content/DeleteVideoModal";
 import { formatDuration, formatViews, timeAgo } from "../utils/formatters";
 
 const STATS = [
-  { key: "totalVideos", label: "Videos", icon: VideoIcon },
-  { key: "totalViews", label: "Views", icon: EyeIcon },
-  { key: "totalSubscribers", label: "Subscribers", icon: SubscribersIcon },
-  { key: "totalLikes", label: "Likes", icon: LikeIcon },
+  { key: "totalVideos", label: "Videos" },
+  { key: "totalViews", label: "Views" },
+  { key: "totalSubscribers", label: "Subscribers" },
+  { key: "totalLikes", label: "Likes" },
 ];
 
 const compact = (number) => new Intl.NumberFormat("en", { notation: "compact" }).format(number);
@@ -34,9 +34,8 @@ const compact = (number) => new Intl.NumberFormat("en", { notation: "compact" })
 function ContentRow({ video, busy, leaving, onToggle, onEdit, onDelete }) {
   return (
     <div
-      className={`group flex flex-col gap-3 rounded-2xl border border-white/10 bg-white/[0.03] p-3 transition duration-300 hover:border-white/20 hover:bg-white/[0.05] sm:flex-row sm:items-center ${
-        leaving ? "scale-95 opacity-0" : ""
-      }`}
+      className={`group flex flex-col gap-3 py-4 transition duration-300 sm:flex-row sm:items-center sm:gap-4 ${leaving ? "scale-95 opacity-0" : ""
+        }`}
     >
       <Link
         to={`/videos/${video._id}`}
@@ -45,11 +44,10 @@ function ContentRow({ video, busy, leaving, onToggle, onEdit, onDelete }) {
         <img
           src={video.thumbnail}
           alt={video.title}
-          className={`h-full w-full object-cover transition duration-500 group-hover:scale-105 ${
-            video.isPublished ? "" : "opacity-50"
-          }`}
+          className={`h-full w-full object-cover transition duration-500 group-hover:scale-105 ${video.isPublished ? "" : "opacity-50"
+            }`}
         />
-        <span className="absolute bottom-1 right-1 rounded bg-black/80 px-1 text-xs font-medium">
+        <span className="absolute bottom-1.5 right-1.5 rounded bg-black/75 px-1.5 py-0.5 text-xs font-medium">
           {formatDuration(video.duration)}
         </span>
       </Link>
@@ -57,28 +55,26 @@ function ContentRow({ video, busy, leaving, onToggle, onEdit, onDelete }) {
       <div className="min-w-0 flex-1">
         <Link
           to={`/videos/${video._id}`}
-          className="line-clamp-2 font-semibold leading-snug transition-colors hover:text-purple-300"
+          className="line-clamp-2 font-semibold leading-snug hover:underline"
         >
           {video.title}
         </Link>
-        <p className="mt-1 text-sm text-gray-400">
-          {formatViews(video.views)} • {timeAgo(video.createdAt)}
+        <p className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-gray-400">
+          <span className="inline-flex items-center gap-1.5">
+            <span
+              className={`h-1.5 w-1.5 rounded-full ${video.isPublished ? "bg-emerald-400" : "bg-amber-400"
+                }`}
+            />
+            {video.isPublished ? "Published" : "Hidden"}
+          </span>
+          <span aria-hidden="true">·</span>
+          <span>{formatViews(video.views)}</span>
+          <span aria-hidden="true">·</span>
+          <span>{timeAgo(video.createdAt)}</span>
         </p>
-        <span
-          className={`mt-2 inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium ${
-            video.isPublished ? "bg-emerald-500/15 text-emerald-300" : "bg-amber-500/15 text-amber-300"
-          }`}
-        >
-          <span
-            className={`h-1.5 w-1.5 rounded-full ${
-              video.isPublished ? "bg-emerald-400" : "bg-amber-400"
-            }`}
-          />
-          {video.isPublished ? "Published" : "Hidden"}
-        </span>
       </div>
 
-      <div className="flex shrink-0 items-center gap-3">
+      <div className="flex shrink-0 items-center gap-2">
         <button
           type="button"
           role="switch"
@@ -87,14 +83,12 @@ function ContentRow({ video, busy, leaving, onToggle, onEdit, onDelete }) {
           title={video.isPublished ? "Click to hide" : "Click to publish"}
           disabled={busy}
           onClick={() => onToggle(video)}
-          className={`relative h-6 w-11 cursor-pointer rounded-full transition-colors disabled:opacity-60 ${
-            video.isPublished ? "bg-purple-500" : "bg-white/15"
-          }`}
+          className={`relative mr-1 h-6 w-11 cursor-pointer rounded-full transition-colors disabled:opacity-60 ${video.isPublished ? "bg-purple-500" : "bg-white/15"
+            }`}
         >
           <span
-            className={`absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform duration-200 ${
-              video.isPublished ? "translate-x-5" : ""
-            }`}
+            className={`absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform duration-200 ${video.isPublished ? "translate-x-5" : ""
+              }`}
           />
         </button>
 
@@ -103,7 +97,7 @@ function ContentRow({ video, busy, leaving, onToggle, onEdit, onDelete }) {
           onClick={() => onEdit(video)}
           aria-label="Edit video"
           title="Edit"
-          className="cursor-pointer rounded-full p-2 text-gray-300 transition hover:bg-white/10 hover:text-white active:scale-90"
+          className="cursor-pointer rounded-full p-2 text-gray-400 transition hover:bg-white/10 hover:text-white active:scale-90"
         >
           <PencilIcon size={18} />
         </button>
@@ -112,7 +106,7 @@ function ContentRow({ video, busy, leaving, onToggle, onEdit, onDelete }) {
           onClick={() => onDelete(video)}
           aria-label="Delete video"
           title="Delete"
-          className="cursor-pointer rounded-full p-2 text-gray-300 transition hover:bg-red-500/15 hover:text-red-300 active:scale-90"
+          className="cursor-pointer rounded-full p-2 text-gray-400 transition hover:bg-red-500/15 hover:text-red-300 active:scale-90"
         >
           <TrashIcon size={18} />
         </button>
@@ -179,7 +173,7 @@ export default function MyContent() {
   const refreshStats = () => {
     getChannelStats()
       .then(setStats)
-      .catch(() => {}); // the old numbers stay if this fails
+      .catch(() => { }); // the old numbers stay if this fails
   };
 
   const handleToggle = async (video) => {
@@ -211,12 +205,12 @@ export default function MyContent() {
       prev.map((item) =>
         item._id === updated._id
           ? {
-              ...item,
-              title: updated.title,
-              description: updated.description,
-              thumbnail: updated.thumbnail,
-              updatedAt: updated.updatedAt,
-            }
+            ...item,
+            title: updated.title,
+            description: updated.description,
+            thumbnail: updated.thumbnail,
+            updatedAt: updated.updatedAt,
+          }
           : item
       )
     );
@@ -243,15 +237,20 @@ export default function MyContent() {
   if (loading) {
     return (
       <div className="mx-auto max-w-6xl animate-pulse">
-        <div className="h-36 rounded-2xl bg-white/10" />
-        <div className="mt-4 grid grid-cols-2 gap-3 lg:grid-cols-4">
+        <PageHeaderSkeleton />
+        <div className="mt-6 grid grid-cols-2 gap-6 sm:grid-cols-4">
           {Array.from({ length: 4 }, (_, index) => (
-            <div key={index} className="h-24 rounded-2xl bg-white/10" />
+            <div key={index}>
+              <div className="h-4 w-16 rounded bg-white/10" />
+              <div className="mt-2 h-8 w-20 rounded bg-white/10" />
+            </div>
           ))}
         </div>
-        <div className="mt-6 space-y-3">
+        <div className="mt-6 divide-y divide-white/10">
           {Array.from({ length: 4 }, (_, index) => (
-            <div key={index} className="h-24 rounded-2xl bg-white/10" />
+            <div key={index} className="py-4">
+              <div className="h-20 rounded-lg bg-white/10" />
+            </div>
           ))}
         </div>
       </div>
@@ -276,29 +275,25 @@ export default function MyContent() {
     <div className="fade-up mx-auto max-w-6xl">
       <PageHeader
         icon={VideoIcon}
-        eyebrow="Your channel"
         title="My content"
-        description="Upload videos, edit them, and decide which ones everyone can see."
+        actions={videos.length > 0 ? uploadButton : null}
       />
 
-      {/* Channel stats */}
-      <div className="mt-4 grid grid-cols-2 gap-3 lg:grid-cols-4">
-        {STATS.map(({ key, label, icon: Icon }, index) => (
+      {/* Channel stats: just numbers */}
+      <dl className="mt-6 grid grid-cols-2 gap-6 sm:grid-cols-4">
+        {STATS.map(({ key, label }, index) => (
           <div
             key={key}
-            className="fade-up flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.04] p-4"
+            className="fade-up"
             style={{ animationDelay: `${index * 60}ms` }}
           >
-            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-purple-500/15 text-purple-300">
-              <Icon size={20} />
-            </span>
-            <div className="min-w-0">
-              <p className="text-xl font-semibold">{compact(stats?.[key] || 0)}</p>
-              <p className="truncate text-sm text-gray-500">{label}</p>
-            </div>
+            <dt className="text-sm text-gray-500">{label}</dt>
+            <dd className="mt-1 text-3xl font-bold tabular-nums tracking-tight">
+              {compact(stats?.[key] || 0)}
+            </dd>
           </div>
         ))}
-      </div>
+      </dl>
 
       {videos.length === 0 ? (
         <EmptyState
@@ -310,23 +305,20 @@ export default function MyContent() {
         </EmptyState>
       ) : (
         <>
-          <div className="mt-6 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <SearchInput
               value={query}
               onChange={setQuery}
               placeholder="Search your videos..."
-              className="lg:w-80"
+              className="sm:w-80"
             />
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-              <SegmentedControl
-                label="Filter videos"
-                options={filters}
-                value={filterId}
-                onChange={setFilterId}
-                className="sm:w-96"
-              />
-              {uploadButton}
-            </div>
+            <SegmentedControl
+              label="Filter videos"
+              options={filters}
+              value={filterId}
+              onChange={setFilterId}
+              className="sm:w-96"
+            />
           </div>
 
           {actionError && <p className="mt-4 text-sm text-red-400">{actionError}</p>}
@@ -349,7 +341,7 @@ export default function MyContent() {
               </button>
             </EmptyState>
           ) : (
-            <div key={filterId} className="mt-4 space-y-3">
+            <div key={filterId} className="mt-2 divide-y divide-white/10">
               {visibleVideos.map((video, index) => (
                 <div
                   key={video._id}

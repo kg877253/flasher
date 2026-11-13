@@ -1,10 +1,12 @@
 import { asyncHandler } from '../utils/asyncHandler.js';
 import { ApiError } from "../utils/ApiError.js"
 import { User } from "../models/user.model.js"
-import { uploadToCloudinary, deleteFromCloudinary } from "../utils/cloudinary.js"
+import { uploadToCloudinary, deleteFromCloudinary, uploadRemoteToCloudinary } from "../utils/cloudinary.js"
 import { ApiResponse } from "../utils/ApiResponse.js"
 import jwt from 'jsonwebtoken';
 import mongoose from 'mongoose';
+import crypto from "crypto";
+import { OAuth2Client } from "google-auth-library";
 
 const generateAccessandRefreshToken = async (userId) => {
 
@@ -22,6 +24,18 @@ const generateAccessandRefreshToken = async (userId) => {
         throw new ApiError(500, "Error generating tokens")
     }
 }
+
+const googleClient = new OAuth2Client();
+
+// Google gives no username, so build one from the email and make sure it is free
+const makeUniqueUsername = async (email) => {
+    const base = email.split("@")[0].toLowerCase().replace(/[^a-z0-9_]/g, "").slice(0, 20) || "user";
+    let username = base;
+    while (await User.exists({ username })) {
+        username = `${base}${Math.floor(1000 + Math.random() * 9000)}`;
+    }
+    return username;
+};
 
 //Tested(-avatar -coverImage) and working fine
 const registerUser = asyncHandler(async (req, res) => {
@@ -157,6 +171,85 @@ const loginUser = asyncHandler(async (req, res) => {
             "User logged in successfully")
         )
 
+})
+
+
+const googleAuth = asyncHandler(async (req, res) => {
+
+    //1. Get the Google ID token (credential) from frontend
+    //2. Verify it with Google (signature + audience = our client id)
+    //3. Find user by googleId or email, else create a new one
+    //4. Generate tokens, send cookies (same as normal login)
+
+    //1. Get the Google access token from frontend
+    //2. Check it was issued for our app, then read the profile from Google
+    //3. Find user by googleId or email, else create a new one
+    //4. Generate tokens, send cookies (same as normal login)
+
+    const { accessToken: googleToken } = req.body;
+    if (!googleToken) {
+        throw new ApiError(400, "Google access token is required")
+    }
+
+    let profile;
+    try {
+        // 1. Make sure this token was issued for OUR app (blocks tokens made for other apps)
+        const info = await googleClient.getTokenInfo(googleToken);
+        if (info.aud !== process.env.GOOGLE_CLIENT_ID) {
+            throw new Error("Token audience mismatch");
+        }
+
+        // 2. Read name, email and photo from Google
+        const response = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
+            headers: { Authorization: `Bearer ${googleToken}` },
+        });
+        if (!response.ok) throw new Error("Could not read Google profile");
+        profile = await response.json();
+    } catch {
+        throw new ApiError(401, "Google sign-in failed, please try again")
+    }
+
+    const { sub, email, email_verified, name, picture } = profile;
+    if (!email || !email_verified) {
+        throw new ApiError(401, "Your Google email is not verified")
+    }
+
+    let user = await User.findOne({ $or: [{ googleId: sub }, { email: email.toLowerCase() }] });
+
+    if (!user) {
+        // First time: create the account from Google info
+        const uploaded = picture ? await uploadRemoteToCloudinary(picture) : null;
+        const fullname = name || email.split("@")[0];
+
+        user = await User.create({
+            googleId: sub,
+            fullname,
+            username: await makeUniqueUsername(email),
+            email,
+            avatar: uploaded?.url || picture || `https://ui-avatars.com/api/?name=${encodeURIComponent(fullname)}`,
+            coverImage: "",
+            // Required by the schema; random so password login is not possible for this account
+            password: crypto.randomBytes(32).toString("hex"),
+        });
+    } else if (!user.googleId) {
+        // Existing email/password account with the same verified email: link it
+        user.googleId = sub;
+        await user.save({ validateBeforeSave: false });
+    }
+
+    const { accessToken, refreshToken } = await generateAccessandRefreshToken(user._id);
+    const loggedInUser = await User.findById(user._id).select("-password -refreshToken -googleId")
+
+    const isProd = process.env.NODE_ENV === "production"
+    const baseOptions = { httpOnly: true, secure: true, sameSite: isProd ? "none" : "lax" }
+    const accessOptions = { ...baseOptions, maxAge: 24 * 60 * 60 * 1000 }
+    const refreshOptions = { ...baseOptions, maxAge: 10 * 24 * 60 * 60 * 1000 }
+
+    return res
+        .status(200)
+        .cookie("accessToken", accessToken, accessOptions)
+        .cookie("refreshToken", refreshToken, refreshOptions)
+        .json(new ApiResponse(200, { user: loggedInUser }, "Logged in with Google"))
 })
 
 
@@ -511,4 +604,4 @@ const getWatchHistory = asyncHandler(async (req, res) => {
 })
 
 
-export { registerUser, loginUser, logoutUser, refreshAccessToken, changeCurrentPassword, getcurrentuser, updateaccountdetails, updateuseravatar, updateusercoverimage, getUserChannelProfile, searchUsers, getWatchHistory }
+export { registerUser, loginUser, logoutUser, refreshAccessToken, changeCurrentPassword, getcurrentuser, updateaccountdetails, updateuseravatar, updateusercoverimage, getUserChannelProfile, searchUsers, getWatchHistory, googleAuth }

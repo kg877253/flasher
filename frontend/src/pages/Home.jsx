@@ -1,17 +1,28 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { getAllVideos } from "../api/video.api";
 import { searchUsers } from "../api/user.api";
 import VideoCard from "../components/VideoCard";
 import VideoCardSkeleton from "../components/VideoCardSkeleton";
-import { Link } from "react-router-dom";
+import SegmentedControl from "../components/SegmentedControl";
+import EmptyState from "../components/channel/EmptyState";
+import { SearchIcon, VideoIcon } from "../components/Icons";
 
 const LIMIT = 12;
 
-export default function Home() {
+const SORT_OPTIONS = [
+  { id: "latest", label: "Latest" },
+  { id: "popular", label: "Popular" },
+];
 
+// Latest is the backend default (newest first), Popular sorts by views
+const sortParams = (sort) =>
+  sort === "popular" ? { sortBy: "views", sortType: "desc" } : {};
+
+export default function Home() {
   const [searchParams] = useSearchParams();
   const query = searchParams.get("query") || "";
+  const [sort, setSort] = useState("latest");
   const [videos, setVideos] = useState([]);
   const [channels, setChannels] = useState([]);
   const [page, setPage] = useState(1);
@@ -21,7 +32,7 @@ export default function Home() {
   const [error, setError] = useState("");
   const bottomRef = useRef(null);
 
-  // First page: runs on load and every time the search text changes
+  // First page: runs on load and every time the search text or sort changes
   useEffect(() => {
     let ignore = false; // ignores an old response if the search changed meanwhile
 
@@ -30,7 +41,7 @@ export default function Home() {
       setError("");
       try {
         const [data, users] = await Promise.all([
-          getAllVideos({ page: 1, limit: LIMIT, query }),
+          getAllVideos({ page: 1, limit: LIMIT, query, ...sortParams(sort) }),
           query ? searchUsers(query) : Promise.resolve([]),
         ]);
         if (ignore) return;
@@ -50,13 +61,18 @@ export default function Home() {
     return () => {
       ignore = true;
     };
-  }, [query]);
+  }, [query, sort]);
 
   // Next pages: adds the new videos below the old ones
   const loadMore = useCallback(async () => {
     setLoadingMore(true);
     try {
-      const data = await getAllVideos({ page: page+1, limit: LIMIT, query });
+      const data = await getAllVideos({
+        page: page + 1,
+        limit: LIMIT,
+        query,
+        ...sortParams(sort),
+      });
       setVideos((current) => [...current, ...data.allvideos]);
       setPage(page + 1);
       setHasNextPage(data.hasNextPage);
@@ -66,7 +82,7 @@ export default function Home() {
     } finally {
       setLoadingMore(false);
     }
-  }, [page, query]);
+  }, [page, query, sort]);
 
   // Watches the empty div at the bottom: when it comes on screen, load more
   useEffect(() => {
@@ -81,78 +97,100 @@ export default function Home() {
     return () => observer.disconnect();
   }, [hasNextPage, loading, loadingMore, loadMore]);
 
-  const grid = "grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4";
+  const grid =
+    "grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4";
 
-  if (loading) {
+  const title = query
+    ? `Results for "${query}"`
+    : sort === "popular"
+      ? "Popular videos"
+      : "Latest videos";
+
+  const renderContent = () => {
+    if (loading) {
+      return (
+        <div className={grid}>
+          {Array.from({ length: 10 }, (_, i) => (
+            <VideoCardSkeleton key={i} />
+          ))}
+        </div>
+      );
+    }
+
+    if (error && videos.length === 0) {
+      return <p className="mt-20 text-center text-red-400">{error}</p>;
+    }
+
+    if (videos.length === 0) {
+      if (query && channels.length > 0) {
+        return <ChannelResults channels={channels} query={query} />;
+      }
+      return query ? (
+        <EmptyState
+          icon={SearchIcon}
+          title={`No results for "${query}"`}
+          text="Try a different word or check the spelling."
+        />
+      ) : (
+        <EmptyState
+          icon={VideoIcon}
+          title="No videos yet"
+          text="There are no videos here yet. Check back soon."
+        />
+      );
+    }
+
     return (
-      <div className={grid}>
-        {Array.from({ length: 10 }, (_, i) => (
-          <VideoCardSkeleton key={i} />
-        ))}
-      </div>
-    );
-  }
-
-  if (error && videos.length === 0) {
-    return <p className="mt-20 text-center text-red-400">{error}</p>;
-  }
-
-  if (videos.length === 0) {
-    return (
-      <div className="mx-auto mt-8 max-w-6xl">
-        {query && channels.length > 0 ? (
+      <>
+        {query && channels.length > 0 && (
           <ChannelResults channels={channels} query={query} />
-        ) : (
-          <div className="rounded-md border border-gray-500 p-6 text-center">
-            <h1 className="text-2xl font-bold">
-              {query ? `No results found for "${query}"` : "No Videos available"}
-            </h1>
-            <p className="mt-2 text-sm text-gray-400">
-              {query ? "Try a different word." : "There are no videos here yet."}
-            </p>
-          </div>
         )}
-      </div>
+
+        <div className={grid}>
+          {videos.map((video, i) => (
+            <VideoCard key={video._id} video={video} index={i % LIMIT} />
+          ))}
+          {loadingMore &&
+            Array.from({ length: 4 }, (_, i) => (
+              <VideoCardSkeleton key={`more-${i}`} />
+            ))}
+        </div>
+
+        {/* Invisible marker: when it appears on screen we load the next page */}
+        <div ref={bottomRef} className="h-10" />
+
+        {error && <p className="text-center text-red-400">{error}</p>}
+      </>
     );
-  }
+  };
 
   return (
     <div>
-      {query && <h1 className="mb-4 text-lg font-semibold">Results for "{query}"</h1>}
-
-      {query && channels.length > 0 && <ChannelResults channels={channels} query={query} />}
-
-      <div className={grid}>
-        {videos.map((video) => (
-          <VideoCard key={video._id} video={video} />
-        ))}
-        {loadingMore &&
-          Array.from({ length: 4 }, (_, i) => <VideoCardSkeleton key={`more-${i}`} />)}
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+        <h1 className="min-w-0 truncate text-xl font-bold tracking-tight">{title}</h1>
+        <SegmentedControl
+          label="Sort videos"
+          options={SORT_OPTIONS}
+          value={sort}
+          onChange={setSort}
+          className="w-full sm:w-56"
+        />
       </div>
 
-      {/* Invisible marker: when it appears on screen we load the next page */}
-      <div ref={bottomRef} className="h-10" />
-
-      {error && <p className="text-center text-red-400">{error}</p>}
-
+      {renderContent()}
     </div>
   );
 }
 
+
+
 function ChannelResults({ channels, query }) {
   return (
     <section className="mb-8 overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03]">
-      <div className="relative border-b border-white/10 px-5 py-5 sm:px-6">
-        <div className="absolute -right-16 -top-24 h-48 w-48 rounded-full bg-purple-500/15 blur-3xl" />
-        <p className="relative text-xs font-medium uppercase tracking-[0.18em] text-purple-300">
-          People
-        </p>
-        <h2 className="relative mt-1 text-xl font-semibold">
-          Channels matching <span className="text-purple-300">"{query}"</span>
+      <div className="border-b border-white/10 px-5 py-4 sm:px-6">
+        <h2 className="font-semibold">
+          Channels matching <span className="text-gray-400">"{query}"</span>
         </h2>
-        <p className="relative mt-1 text-sm text-gray-400">
-          Find a creator and visit their channel.
-        </p>
       </div>
       <div className="grid gap-3 p-4 sm:grid-cols-2 sm:p-5 lg:grid-cols-3 xl:grid-cols-4">
         {channels.map((channel) => (

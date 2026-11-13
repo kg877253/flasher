@@ -23,10 +23,12 @@ function Notice({ message, error = false }) {
 
 function Section({ title, description, children }) {
   return (
-    <section className="rounded-2xl border border-white/10 bg-white/[0.03] p-5 sm:p-6">
-      <h2 className="text-lg font-semibold">{title}</h2>
-      <p className="mt-1 text-sm text-gray-400">{description}</p>
-      <div className="mt-5">{children}</div>
+    <section className="grid gap-4 py-8 md:grid-cols-[240px_minmax(0,1fr)] md:gap-10">
+      <div>
+        <h2 className="font-semibold">{title}</h2>
+        <p className="mt-1 text-sm text-gray-400">{description}</p>
+      </div>
+      <div className="min-w-0">{children}</div>
     </section>
   );
 }
@@ -98,12 +100,11 @@ export default function Settings() {
     <div className="fade-up mx-auto max-w-5xl">
       <PageHeader
         icon={SettingsIcon}
-        eyebrow="Your account"
         title="Settings"
-        description="Manage your profile, channel appearance and account security."
+        subtitle="Profile, channel images and password."
       />
 
-      <div className="mt-6 space-y-6">
+      <div className="divide-y divide-white/10">
         <Section title="Profile details" description="Keep the information on your channel up to date.">
           <form onSubmit={saveProfile} className="grid gap-4 sm:grid-cols-2">
             <label className="text-sm text-gray-400">
@@ -140,12 +141,12 @@ export default function Settings() {
         </Section>
 
         <Section title="Channel appearance" description="Use clear images so people recognize your channel.">
-          <div className="overflow-hidden rounded-2xl border border-white/10 bg-black">
+          <div className="overflow-hidden rounded-xl border border-white/10 bg-black">
             <div className="relative h-32 sm:h-44">
               {user?.coverImage ? (
                 <img src={user.coverImage} alt="" className="h-full w-full object-cover" />
               ) : (
-                <div className="h-full w-full bg-gradient-to-r from-purple-500/60 via-pink-500/40 to-orange-400/50" />
+                <div className="h-full w-full bg-gradient-to-r from-white/10 to-white/[0.04]" />
               )}
             </div>
             <div className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between">
@@ -215,7 +216,7 @@ export default function Settings() {
             <button
               type="submit"
               disabled={passwordState.loading}
-              className="cursor-pointer rounded-full bg-purple-500 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-purple-400 disabled:cursor-not-allowed disabled:opacity-50"
+              className="cursor-pointer rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-black transition hover:bg-gray-200 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {passwordState.loading ? "Updating..." : "Change password"}
             </button>

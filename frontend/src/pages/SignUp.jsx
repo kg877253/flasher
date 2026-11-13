@@ -5,9 +5,12 @@ import AuthLayout from "../components/auth/AuthLayout";
 import AuthField, { AuthButton, AuthError } from "../components/auth/AuthField";
 import { AvatarPicker, CoverPicker } from "../components/auth/ImagePickers";
 import { AtIcon, CheckIcon, LockIcon, MailIcon, UserIcon } from "../components/Icons";
+import useAuth from "../hooks/useAuth";
+import GoogleButton, { OrDivider } from "../components/auth/GoogleButton";
 
 export default function SignUp() {
   const navigate = useNavigate();
+  const { loginWithGoogle } = useAuth();
   const [form, setForm] = useState({
     fullname: "",
     username: "",
@@ -45,6 +48,16 @@ export default function SignUp() {
     }
   };
 
+  const handleGoogle = async (credential) => {
+    setError(null);
+    try {
+      await loginWithGoogle(credential);
+      navigate("/", { replace: true });
+    } catch (err) {
+      setError(err.response?.data?.message || "Google sign-in failed");
+    }
+  };
+
   // The backend stores usernames in lowercase
   const usernamePreview = form.username.trim().toLowerCase() || "username";
   const passwordOk = form.password.length >= 8;
@@ -58,6 +71,14 @@ export default function SignUp() {
             Pick a photo and a username, and you are in.
           </p>
         </div>
+        <div className="fade-up" style={{ animationDelay: "70ms" }}>
+          <GoogleButton
+            text="signup_with"
+            onCredential={handleGoogle}
+            onError={() => setError("Google sign-in failed")}
+          />
+        </div>
+        <OrDivider />
 
         <AvatarPicker index={1} onChange={setAvatar} invalid={!!error && !avatar} />
 
@@ -116,9 +137,8 @@ export default function SignUp() {
           required
           hint={
             <p
-              className={`mt-1.5 flex items-center gap-1.5 text-xs transition-colors ${
-                passwordOk ? "text-green-400" : "text-gray-500"
-              }`}
+              className={`mt-1.5 flex items-center gap-1.5 text-xs transition-colors ${passwordOk ? "text-green-400" : "text-gray-500"
+                }`}
             >
               <CheckIcon size={14} />
               At least 8 characters

@@ -39,6 +39,11 @@ const userSchema = new Schema({
         type: String,
         required: [true, "Password is required"],
     },
+    googleId: {
+        type: String,
+        unique: true,
+        sparse: true,   // many users without googleId are fine
+    },
     refreshToken: {
         type: String,
     },
@@ -63,14 +68,14 @@ userSchema.methods.iscorrectpassword = async function (password) {
 userSchema.methods.generateAccessToken = function () {
     return jwt.sign(
         {
-            _id : this._id,
-            email : this.email,
-            username : this.username,
-            fullname : this.fullname
+            _id: this._id,
+            email: this.email,
+            username: this.username,
+            fullname: this.fullname
         },
         process.env.ACCESS_TOKEN_SECRET,
         {
-            expiresIn : process.env.ACCESS_TOKEN_EXPIRY
+            expiresIn: process.env.ACCESS_TOKEN_EXPIRY
         }
     )
 }
@@ -78,11 +83,11 @@ userSchema.methods.generateAccessToken = function () {
 userSchema.methods.generateRefreshToken = function () {
     return jwt.sign(
         {
-            _id : this._id,
+            _id: this._id,
         },
         process.env.REFRESH_TOKEN_SECRET,
         {
-            expiresIn : process.env.REFRESH_TOKEN_EXPIRY
+            expiresIn: process.env.REFRESH_TOKEN_EXPIRY
         }
     )
 }

@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { HistoryIcon, LikeIcon, SearchIcon } from "../components/Icons";
-import PageHeader from "../components/PageHeader";
 import SearchInput from "../components/SearchInput";
 import SegmentedControl from "../components/SegmentedControl";
 import EmptyState from "../components/channel/EmptyState";
 import VideoRow from "../components/VideoRow";
+import PageHeader, { PageHeaderSkeleton } from "../components/PageHeader";
 import { formatViews } from "../utils/formatters";
 
 const SORTS = [
@@ -105,7 +105,7 @@ export default function VideoCollection({ type, fetchVideos }) {
   if (loading) {
     return (
       <div className="mx-auto max-w-6xl animate-pulse">
-        <div className="h-44 rounded-2xl bg-white/10" />
+        <PageHeaderSkeleton />
         <div className="mt-6 h-10 w-full rounded-full bg-white/10 sm:w-80" />
         <div className="mt-6 grid gap-2 md:grid-cols-2">
           {Array.from({ length: 6 }, (_, index) => (
@@ -134,9 +134,7 @@ export default function VideoCollection({ type, fetchVideos }) {
     <div className="fade-up mx-auto max-w-6xl">
       <PageHeader
         icon={content.icon}
-        eyebrow={content.eyebrow}
         title={content.title}
-        description={content.description}
         stats={[
           { value: videos.length, label: videos.length === 1 ? "video" : "videos" },
           { value: formatViews(totalViews).split(" ")[0], label: "total views" },

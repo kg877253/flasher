@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { refreshSession } from "../api/axios";
-import { getCurrentUser, loginUser, logoutUser } from "../api/user.api";
+import { getCurrentUser, loginUser, logoutUser, googleAuth } from "../api/user.api";
 import { AuthContext } from "./context";
 
 export default function AuthProvider({ children }) {
@@ -45,6 +45,11 @@ export default function AuthProvider({ children }) {
     setUser(data.user);
   };
 
+  const loginWithGoogle = async (credential) => {
+    const data = await googleAuth(credential);
+    setUser(data.user);
+  };
+
   const logout = async () => {
     await logoutUser();
     setUser(null);
@@ -55,7 +60,7 @@ export default function AuthProvider({ children }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout, updateUser }}>
+    <AuthContext.Provider value={{ user, loading, login, logout, updateUser, loginWithGoogle }}>
       {children}
     </AuthContext.Provider>
   );
