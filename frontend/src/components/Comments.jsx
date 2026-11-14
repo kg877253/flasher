@@ -10,6 +10,7 @@ import { toggleCommentLike } from "../api/like.api";
 import { timeAgo } from "../utils/formatters";
 import { LikeIcon, PencilIcon, TrashIcon } from "./Icons";
 import { imgAvatar } from "../utils/image";
+import { toast } from "sonner";
 
 const LIMIT = 10;
 
@@ -83,6 +84,7 @@ export default function Comments({ videoId }) {
       setComments([{ ...newComment, owner: user, likesCount: 0, isLiked: false }, ...comments]);
       setTotal(total + 1);
       setText("");
+      toast.success("Comment posted");
     } catch (err) {
       setError(err.response?.data?.message || "Failed to add comment");
     } finally {
@@ -104,6 +106,7 @@ export default function Comments({ videoId }) {
       );
       setEditingId(null);
       setEditText("");
+      toast.success("Comment updated");
     } catch (err) {
       setError(err.response?.data?.message || "Failed to update comment");
     } finally {
@@ -121,6 +124,7 @@ export default function Comments({ videoId }) {
       setComments((current) => current.filter((comment) => comment._id !== commentId));
       setTotal((current) => Math.max(0, current - 1));
       if (editingId === commentId) setEditingId(null);
+      toast.success("Comment deleted");
     } catch (err) {
       setError(err.response?.data?.message || "Failed to delete comment");
     } finally {

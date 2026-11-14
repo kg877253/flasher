@@ -11,6 +11,7 @@ import { timeAgo } from "../../utils/formatters";
 import EmptyState from "./EmptyState";
 import { LikeIcon, PencilIcon, TrashIcon, UserIcon } from "../Icons";
 import { imgAvatar } from "../../utils/image";
+import { toast } from "sonner";
 
 const MAX_LENGTH = 80;
 
@@ -54,6 +55,7 @@ export default function TweetsTab({ channel }) {
       const tweet = await createTweet(text.trim());
       setTweets((current) => [tweet, ...current]);
       setText("");
+      toast.success("Tweet posted");
     } catch (err) {
       setError(err.response?.data?.message || "Failed to create tweet");
     } finally {
@@ -72,6 +74,7 @@ export default function TweetsTab({ channel }) {
       );
       setEditingId(null);
       setEditText("");
+      toast.success("Tweet updated");
     } catch (err) {
       setError(err.response?.data?.message || "Failed to update tweet");
     } finally {
@@ -86,6 +89,7 @@ export default function TweetsTab({ channel }) {
     try {
       await deleteTweet(tweetId);
       setTweets((current) => current.filter((tweet) => tweet._id !== tweetId));
+      toast.success("Tweet deleted");
     } catch (err) {
       setError(err.response?.data?.message || "Failed to delete tweet");
     } finally {

@@ -7,6 +7,7 @@ import { AvatarPicker, CoverPicker } from "../components/auth/ImagePickers";
 import { AtIcon, CheckIcon, LockIcon, MailIcon, UserIcon } from "../components/Icons";
 import useAuth from "../hooks/useAuth";
 import GoogleButton, { OrDivider } from "../components/auth/GoogleButton";
+import { toast } from "sonner";
 
 export default function SignUp() {
   const navigate = useNavigate();
@@ -40,6 +41,7 @@ export default function SignUp() {
 
     try {
       await registerUser(data);
+      toast.success("Account created. Please log in.");
       navigate("/login");
     } catch (err) {
       setError(err.response?.data?.message || "Something went wrong");

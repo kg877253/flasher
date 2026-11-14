@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { toggleVideoLike } from "../api/like.api";
 import { LikeIcon } from "./Icons";
+import { toast } from "sonner";
 
 export default function LikeButton({ videoId, initialLiked, initialCount }) {
   const [liked, setLiked] = useState(initialLiked);
@@ -15,8 +16,10 @@ export default function LikeButton({ videoId, initialLiked, initialCount }) {
       const { isLiked } = await toggleVideoLike(videoId);
       setLiked(isLiked);
       setCount(count + (isLiked ? 1 : -1));
+      toast.success(isLiked ? "Added to your liked videos" : "Removed from your liked videos");
     } catch (err) {
       console.error("Failed to like the video", err);
+      toast.error("Could not update your like. Please try again.");
     } finally {
       setBusy(false);
     }

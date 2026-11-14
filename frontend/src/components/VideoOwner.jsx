@@ -5,6 +5,7 @@ import { getUserChannelProfile } from "../api/user.api";
 import { toggleSubscription } from "../api/subscription.api";
 import { formatSubscribers } from "../utils/formatters";
 import { imgAvatar } from "../utils/image";
+import { toast } from "sonner";
 
 export default function VideoOwner({ owner }) {
   const { user } = useAuth();
@@ -38,6 +39,7 @@ export default function VideoOwner({ owner }) {
         isSubscribed,
         subscribersCount: channel.subscribersCount + (isSubscribed ? 1 : -1),
       });
+      toast.success(isSubscribed ? `Subscribed to ${owner.fullname || owner.username}` : "Unsubscribed");
     } catch (err) {
       setError(err.response?.data?.message || "Something went wrong");
     } finally {

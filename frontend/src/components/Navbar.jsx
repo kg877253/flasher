@@ -6,6 +6,7 @@ import NavSearch from "./NavSearch";
 import Dropdown, { DropdownItem, DropdownSeparator } from "./Dropdown";
 import { ChevronDownIcon, LogoutIcon, MenuIcon, SettingsIcon, UserIcon } from "./Icons";
 import { imgAvatar } from "../utils/image";
+import { toast } from "sonner";
 
 export default function Navbar({ onMenuClick }) {
   const { user, loading, logout } = useAuth();
@@ -14,8 +15,10 @@ export default function Navbar({ onMenuClick }) {
   const handleLogout = async () => {
     try {
       await logout();
+      toast.success("Logged out");
     } catch (err) {
       console.error("Logout failed:", err);
+      toast.error("Could not log out. Please try again.");
     }
   };
 

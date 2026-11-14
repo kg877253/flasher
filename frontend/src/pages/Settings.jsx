@@ -9,6 +9,7 @@ import {
 import { CheckIcon, SettingsIcon, UploadIcon } from "../components/Icons";
 import PageHeader from "../components/PageHeader";
 import { imgAvatar, imgCover } from "../utils/image";
+import { toast } from "sonner";
 
 const inputClass =
   "mt-1 w-full rounded-xl border border-white/10 bg-white/5 px-3.5 py-2.5 text-sm outline-none transition focus:border-purple-400/60 focus:bg-white/10";
@@ -52,6 +53,7 @@ export default function Settings() {
       const updatedUser = await updateAccountDetails(profile);
       updateUser(updatedUser);
       setProfileState({ loading: false, message: "Profile updated successfully.", error: "" });
+      toast.success("Profile updated");
     } catch (error) {
       setProfileState({
         loading: false,
@@ -68,6 +70,7 @@ export default function Settings() {
       await changePassword(password);
       setPassword({ oldPassword: "", newPassword: "" });
       setPasswordState({ loading: false, message: "Password changed successfully.", error: "" });
+      toast.success("Password changed");
     } catch (error) {
       setPasswordState({
         loading: false,
@@ -83,6 +86,7 @@ export default function Settings() {
     try {
       const updatedUser = type === "avatar" ? await updateAvatar(file) : await updateCoverImage(file);
       updateUser(updatedUser);
+      toast.success(type === "avatar" ? "Avatar updated" : "Cover image updated");
       setImageState({
         loading: "",
         message: `${type === "avatar" ? "Avatar" : "Cover image"} updated successfully.`,

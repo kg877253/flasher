@@ -22,6 +22,7 @@ import {
 } from "../components/Icons";
 import { formatViews, timeAgo } from "../utils/formatters";
 import { imgAvatar, imgThumb } from "../utils/image";
+import { toast } from "sonner";
 
 const formatTotalDuration = (seconds = 0) => {
   const hours = Math.floor(seconds / 3600);
@@ -256,6 +257,7 @@ export default function Playlist() {
       updatedAt: updated.updatedAt,
     }));
     setEditing(false);
+    toast.success("Playlist updated");
   };
 
   const handleRemove = async (videoId) => {
@@ -263,6 +265,7 @@ export default function Playlist() {
     setActionError("");
     try {
       await removeVideoFromPlaylist(videoId, playlist._id);
+      toast.success("Removed from playlist");
       setLeavingId(videoId); // plays the exit animation first
       setTimeout(() => {
         setPlaylist((prev) => ({
@@ -472,7 +475,10 @@ export default function Playlist() {
         <DeletePlaylistModal
           playlist={playlist}
           onClose={() => setDeleting(false)}
-          onDeleted={() => navigate(backTo, { replace: true })}
+          onDeleted={() => {
+            toast.success("Playlist deleted");
+            navigate(backTo, { replace: true });
+          }}
         />
       )}
     </div>

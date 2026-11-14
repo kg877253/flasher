@@ -19,6 +19,7 @@ import EditVideoModal from "../components/content/EditVideoModal";
 import DeleteVideoModal from "../components/content/DeleteVideoModal";
 import { formatDuration, formatViews, timeAgo } from "../utils/formatters";
 import { imgThumb } from "../utils/image";
+import { toast } from "sonner";
 
 const STATS = [
   { key: "totalVideos", label: "Videos" },
@@ -185,6 +186,7 @@ export default function MyContent() {
           item._id === video._id ? { ...item, isPublished: updated.isPublished } : item
         )
       );
+      toast.success(updated.isPublished ? "Video published" : "Video hidden");
     } catch (err) {
       setActionError(err.response?.data?.message || "Could not change the publish status");
     } finally {
@@ -196,6 +198,7 @@ export default function MyContent() {
     setVideos((prev) => [video, ...prev]);
     setStats((prev) => prev && { ...prev, totalVideos: prev.totalVideos + 1 });
     setUploading(false);
+    toast.success("Video uploaded");
   };
 
   const handleSaved = (updated) => {
@@ -213,10 +216,12 @@ export default function MyContent() {
       )
     );
     setEditingVideo(null);
+    toast.success("Changes saved");
   };
 
   const handleDeleted = (video) => {
     setDeletingVideo(null);
+    toast.success("Video deleted");
     setLeavingId(video._id); // plays the exit animation first
     setTimeout(() => {
       setVideos((prev) => prev.filter((item) => item._id !== video._id));

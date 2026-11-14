@@ -9,6 +9,7 @@ import PurpleButton from "../components/PurpleButton";
 import PlaylistCard from "../components/PlaylistCard";
 import CreatePlaylistModal from "../components/CreatePlaylistModal";
 import EmptyState from "../components/channel/EmptyState";
+import { toast } from "sonner";
 
 const SORTS = [
   { id: "recent", label: "Recent" },
@@ -74,6 +75,7 @@ export default function Collection() {
     setPlaylists((prev) => [playlist, ...prev]);
     setQuery("");
     setCreating(false);
+    toast.success("Playlist created");
   };
 
   const newPlaylistButton = (

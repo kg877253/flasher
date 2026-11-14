@@ -9,6 +9,7 @@ import {
 import { CheckIcon, FolderIcon, PlusIcon } from "./Icons";
 import Modal from "./Modal";
 import PlaylistForm from "./PlaylistForm";
+import { toast } from "sonner";
 
 function SaveModal({ videoId, onClose }) {
   const { user } = useAuth();
@@ -55,6 +56,7 @@ function SaveModal({ videoId, onClose }) {
               : item
           )
         );
+        toast.success(`Removed from ${playlist.name}`);
       } else {
         await addVideoToPlaylist(videoId, playlist._id);
         setPlaylists((prev) =>
@@ -64,6 +66,7 @@ function SaveModal({ videoId, onClose }) {
               : item
           )
         );
+        toast.success(`Saved to ${playlist.name}`);
       }
     } catch (err) {
       setError(err.response?.data?.message || "Something went wrong");
@@ -77,6 +80,7 @@ function SaveModal({ videoId, onClose }) {
     const created = await createPlaylist(values);
     setPlaylists((prev) => [...prev, { ...created, videos: [] }]);
     await addVideoToPlaylist(videoId, created._id);
+    toast.success(`Saved to ${created.name}`);
     setPlaylists((prev) =>
       prev.map((item) =>
         item._id === created._id ? { ...item, videos: [{ _id: videoId }] } : item
