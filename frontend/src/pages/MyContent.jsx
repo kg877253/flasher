@@ -239,7 +239,7 @@ export default function MyContent() {
 
   if (loading) {
     return (
-      <div className="mx-auto max-w-6xl animate-pulse">
+      <div className="mx-auto max-w-6xl shimmer">
         <PageHeaderSkeleton />
         <div className="mt-6 grid grid-cols-2 gap-6 sm:grid-cols-4">
           {Array.from({ length: 4 }, (_, index) => (

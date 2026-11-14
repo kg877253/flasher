@@ -187,7 +187,7 @@ export default function Playlist() {
 
   if (loading) {
     return (
-      <div className="mx-auto max-w-5xl animate-pulse">
+      <div className="mx-auto max-w-5xl shimmer">
         <div className="h-4 w-36 rounded bg-white/10" />
         <div className="mt-5 grid gap-6 rounded-2xl border border-white/10 p-4 sm:grid-cols-[300px_minmax(0,1fr)] sm:p-6">
           <div className="aspect-video rounded-xl bg-white/10" />

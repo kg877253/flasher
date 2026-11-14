@@ -24,7 +24,7 @@ export default function SuggestedVideos({ currentVideoId }) {
 
   if (loading) {
     return (
-      <div className="flex animate-pulse flex-col gap-4">
+      <div className="flex shimmer flex-col gap-4">
         {Array.from({ length: 5 }, (_, i) => (
           <div key={i} className="flex items-start gap-3">
             <div className="aspect-video w-44 shrink-0 rounded-lg bg-gray-800" />

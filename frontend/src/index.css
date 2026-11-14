@@ -229,3 +229,38 @@
     text-wrap: balance;
   }
 }
+
+/* Skeleton shimmer: put .shimmer on a skeleton wrapper (or on a bar itself).
+   Every bar inside that uses bg-gray-800 or bg-white/10 gets a light beam moving across it. */
+@keyframes shimmer {
+  from {
+    background-position: 100% 0;
+  }
+
+  to {
+    background-position: 0 0;
+  }
+}
+
+.shimmer[class~="bg-gray-800"],
+.shimmer[class~="bg-white/10"],
+.shimmer :is([class~="bg-gray-800"], [class~="bg-white/10"]) {
+  /* 300% wide image with a narrow beam in the middle: the beam fully leaves the bar before the loop restarts */
+  background-image: linear-gradient(
+    90deg,
+    transparent 33%,
+    rgba(255, 255, 255, 0.09) 50%,
+    transparent 67%
+  );
+  background-size: 300% 100%;
+  background-repeat: no-repeat;
+  animation: shimmer 1.6s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shimmer[class~="bg-gray-800"],
+  .shimmer[class~="bg-white/10"],
+  .shimmer :is([class~="bg-gray-800"], [class~="bg-white/10"]) {
+    animation: none;
+  }
+}

@@ -34,7 +34,7 @@ export default function Video() {
 
   if (loading)
     return (
-      <div className="grid animate-pulse grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_400px]">
+      <div className="grid shimmer grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_400px]">
         <div className="min-w-0">
           <div className="aspect-video w-full rounded-xl bg-gray-800" />
           <div className="mt-3 h-6 w-3/4 rounded bg-gray-800" />

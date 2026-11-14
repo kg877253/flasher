@@ -65,12 +65,12 @@ const Channel = () => {
     if (loading) {
         return (
             <div>
-                <div className="h-32 animate-pulse rounded-xl bg-white/10 sm:h-48" />
+                <div className="h-32 shimmer rounded-xl bg-white/10 sm:h-48" />
                 <div className="flex items-start gap-4 px-2 pt-3 sm:px-4">
-                    <div className="-mt-10 h-20 w-20 shrink-0 animate-pulse rounded-full border-4 border-black bg-white/10 sm:-mt-14 sm:h-32 sm:w-32" />
+                    <div className="-mt-10 h-20 w-20 shrink-0 shimmer rounded-full border-4 border-black bg-white/10 sm:-mt-14 sm:h-32 sm:w-32" />
                     <div className="flex-1 space-y-2">
-                        <div className="h-6 w-48 animate-pulse rounded bg-white/10" />
-                        <div className="h-4 w-64 animate-pulse rounded bg-white/10" />
+                        <div className="h-6 w-48 shimmer rounded bg-white/10" />
+                        <div className="h-4 w-64 shimmer rounded bg-white/10" />
                     </div>
                 </div>
             </div>

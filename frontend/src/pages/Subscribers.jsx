@@ -78,7 +78,7 @@ export default function Subscribers() {
 
   if (loading) {
     return (
-      <div className="mx-auto max-w-6xl animate-pulse">
+      <div className="mx-auto max-w-6xl shimmer">
         <div className="h-44 rounded-2xl bg-white/10" />
         <div className="mt-6 h-10 w-full rounded-full bg-white/10 sm:w-80" />
         <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">

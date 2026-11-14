@@ -39,7 +39,7 @@ export default function FollowingTab({ channelId }) {
     return (
       <div className={grid}>
         {Array.from({ length: 6 }, (_, i) => (
-          <div key={i} className="h-44 animate-pulse rounded-2xl bg-gray-800" />
+          <div key={i} className="h-44 shimmer rounded-2xl bg-gray-800" />
         ))}
       </div>
     );

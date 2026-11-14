@@ -37,7 +37,7 @@ export default function PlaylistsTab({ channelId }) {
     return (
       <div className={grid}>
         {Array.from({ length: 4 }, (_, i) => (
-          <div key={i} className="animate-pulse pt-3">
+          <div key={i} className="shimmer pt-3">
             <div className="aspect-video rounded-xl bg-gray-800" />
             <div className="mt-3 h-4 w-3/4 rounded bg-gray-800" />
             <div className="mt-2 h-3 w-1/2 rounded bg-gray-800" />

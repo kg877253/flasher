@@ -104,7 +104,7 @@ export default function VideoCollection({ type, fetchVideos }) {
 
   if (loading) {
     return (
-      <div className="mx-auto max-w-6xl animate-pulse">
+      <div className="mx-auto max-w-6xl shimmer">
         <PageHeaderSkeleton />
         <div className="mt-6 h-10 w-full rounded-full bg-white/10 sm:w-80" />
         <div className="mt-6 grid gap-2 md:grid-cols-2">

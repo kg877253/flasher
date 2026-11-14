@@ -196,7 +196,7 @@ export default function Comments({ videoId }) {
 
       {/* Comment list */}
       {loading ? (
-        <div className="mt-6 animate-pulse space-y-5">
+        <div className="mt-6 shimmer space-y-5">
           {[0, 1, 2].map((i) => (
             <div key={i} className="flex gap-3">
               <div className="h-9 w-9 shrink-0 rounded-full bg-gray-800" />

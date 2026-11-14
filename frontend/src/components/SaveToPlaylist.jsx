@@ -100,7 +100,7 @@ function SaveModal({ videoId, onClose }) {
       ) : (
         <>
           {loading ? (
-            <div className="animate-pulse space-y-2">
+            <div className="shimmer space-y-2">
               {Array.from({ length: 3 }, (_, index) => (
                 <div key={index} className="h-12 rounded-xl bg-white/10" />
               ))}

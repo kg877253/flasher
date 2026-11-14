@@ -121,7 +121,7 @@ export default function TweetsTab({ channel }) {
     return (
       <div className="max-w-2xl space-y-3">
         {Array.from({ length: 3 }, (_, i) => (
-          <div key={i} className="h-24 animate-pulse rounded-2xl bg-gray-800" />
+          <div key={i} className="h-24 shimmer rounded-2xl bg-gray-800" />
         ))}
       </div>
     );
