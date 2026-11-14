@@ -21,7 +21,7 @@ export default function MainLayout() {
           mobileOpen={mobileSidebarOpen}
           onMobileClose={() => setMobileSidebarOpen(false)}
         />
-        <main ref={mainRef} className="min-w-0 flex-1 overflow-y-auto p-2">
+        <main ref={mainRef} className="min-w-0 flex-1 overflow-y-auto p-2 [scrollbar-gutter:stable]">
           <Outlet />
         </main>
       </div>

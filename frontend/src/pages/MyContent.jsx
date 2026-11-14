@@ -3,11 +3,8 @@ import { Link } from "react-router-dom";
 import { getChannelStats, getChannelVideos } from "../api/dashboard.api";
 import { toggleVideoPublish } from "../api/video.api";
 import {
-  EyeIcon,
-  LikeIcon,
   PencilIcon,
   SearchIcon,
-  SubscribersIcon,
   TrashIcon,
   UploadIcon,
   VideoIcon,

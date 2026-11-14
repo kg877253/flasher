@@ -75,11 +75,27 @@
 
 /* Error message shake (auth pages) */
 @keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  20% { transform: translateX(-6px); }
-  40% { transform: translateX(5px); }
-  60% { transform: translateX(-3px); }
-  80% { transform: translateX(2px); }
+
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  20% {
+    transform: translateX(-6px);
+  }
+
+  40% {
+    transform: translateX(5px);
+  }
+
+  60% {
+    transform: translateX(-3px);
+  }
+
+  80% {
+    transform: translateX(2px);
+  }
 }
 
 .shake {
@@ -88,10 +104,24 @@
 
 /* Slow diagonal light band across the auth brand panel */
 @keyframes sweep {
-  0% { transform: translateX(-100%) skewX(-18deg); opacity: 0; }
-  15% { opacity: 1; }
-  55% { transform: translateX(400%) skewX(-18deg); opacity: 0; }
-  100% { transform: translateX(400%) skewX(-18deg); opacity: 0; }
+  0% {
+    transform: translateX(-100%) skewX(-18deg);
+    opacity: 0;
+  }
+
+  15% {
+    opacity: 1;
+  }
+
+  55% {
+    transform: translateX(400%) skewX(-18deg);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateX(400%) skewX(-18deg);
+    opacity: 0;
+  }
 }
 
 .sweep {
@@ -99,6 +129,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   .shake,
   .sweep {
     animation: none;
@@ -123,5 +154,78 @@
 @media (prefers-reduced-motion: reduce) {
   .slide-in-left {
     animation: none;
+  }
+}
+
+/* Native controls (select, date picker, autofill) follow the dark theme */
+:root {
+  color-scheme: dark;
+}
+
+/* Minimal scrollbar: thin rounded thumb, no track, no arrows (Chrome, Edge, Safari) */
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  ::-webkit-scrollbar-thumb {
+    background-color: transparent;
+    border-radius: 999px;
+    border: 3px solid transparent;
+    background-clip: content-box;
+  }
+
+  *:hover::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+
+  border-radius: 999px;
+  /* transparent border + content-box makes the visible thumb thinner than the gutter */
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.35);
+}
+
+::-webkit-scrollbar-thumb:active {
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Firefox (it ignores the rules above) */
+@supports not selector(::-webkit-scrollbar) {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.25) transparent;
+  }
+}
+
+/* Purple text highlight instead of the default blue */
+::selection {
+  background: rgba(168, 85, 247, 0.35);
+  color: #fff;
+}
+
+@layer base {
+  /* Visible keyboard focus everywhere; components with their own ring use outline-none and win */
+  :focus-visible {
+    outline: 2px solid #c18af8;
+    outline-offset: 2px;
+  }
+
+  /* Headings break into balanced lines instead of one long and one short */
+  h1,
+  h2 {
+    text-wrap: balance;
   }
 }
