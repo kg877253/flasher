@@ -9,6 +9,7 @@ import {
 import { toggleCommentLike } from "../api/like.api";
 import { timeAgo } from "../utils/formatters";
 import { LikeIcon, PencilIcon, TrashIcon } from "./Icons";
+import { imgAvatar } from "../utils/image";
 
 const LIMIT = 10;
 
@@ -157,7 +158,7 @@ export default function Comments({ videoId }) {
       {/* Add comment */}
       <form onSubmit={handleSubmit} className="mt-4 flex gap-3 border-2 border-gray-400 p-3 rounded-lg">
         <img
-          src={user?.avatar}
+          src={imgAvatar(user?.avatar)}
           alt={user?.username}
           className="h-10 w-10 shrink-0 rounded-full bg-gray-700 object-cover"
         />
@@ -214,7 +215,7 @@ export default function Comments({ videoId }) {
             return (
               <li key={comment._id} className="flex gap-3">
                 <img
-                  src={comment.owner?.avatar}
+                  src={imgAvatar(comment.owner?.avatar)}
                   alt={comment.owner?.username}
                   className="h-10 w-10 shrink-0 rounded-full bg-gray-700 object-cover"
                 />

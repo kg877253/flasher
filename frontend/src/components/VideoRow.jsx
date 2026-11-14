@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { timeAgo, formatDuration, formatViews } from "../utils/formatters";
 import { PlayIcon } from "./Icons";
+import { imgThumb } from "../utils/image";
 
 // index: optional number shown on the left (used in playlists)
 // action: optional button shown on hover at the right. It sits outside the Link,
@@ -22,7 +23,7 @@ export default function VideoRow({ video, index, action }) {
         {/* Thumbnail with duration badge */}
         <div className="relative aspect-video w-44 shrink-0 overflow-hidden rounded-lg bg-gray-800">
           <img
-            src={video.thumbnail}
+            src={imgThumb(video.thumbnail, 560)}
             alt={video.title}
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
           />

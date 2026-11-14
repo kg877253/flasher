@@ -18,6 +18,7 @@ import UploadVideoModal from "../components/content/UploadVideoModal";
 import EditVideoModal from "../components/content/EditVideoModal";
 import DeleteVideoModal from "../components/content/DeleteVideoModal";
 import { formatDuration, formatViews, timeAgo } from "../utils/formatters";
+import { imgThumb } from "../utils/image";
 
 const STATS = [
   { key: "totalVideos", label: "Videos" },
@@ -39,7 +40,7 @@ function ContentRow({ video, busy, leaving, onToggle, onEdit, onDelete }) {
         className="relative aspect-video w-full shrink-0 overflow-hidden rounded-lg bg-gray-800 outline-none focus-visible:ring-2 focus-visible:ring-purple-400 sm:w-44"
       >
         <img
-          src={video.thumbnail}
+          src={imgThumb(video.thumbnail, 400)}
           alt={video.title}
           className={`h-full w-full object-cover transition duration-500 group-hover:scale-105 ${video.isPublished ? "" : "opacity-50"
             }`}

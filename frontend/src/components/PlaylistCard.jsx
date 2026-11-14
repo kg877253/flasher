@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { FolderIcon } from "./Icons";
 import { formatViews, timeAgo } from "../utils/formatters";
+import { imgThumb } from "../utils/image";
 
 export default function PlaylistCard({ playlist, index = 0 }) {
   const firstVideo = playlist.videos?.[0];
@@ -17,7 +18,7 @@ export default function PlaylistCard({ playlist, index = 0 }) {
       <div className="relative aspect-video overflow-hidden rounded-xl bg-[#272727] shadow-md transition duration-300 group-hover:shadow-xl group-hover:shadow-black/30">
         {firstVideo?.thumbnail ? (
           <img
-            src={firstVideo.thumbnail}
+            src={imgThumb(firstVideo.thumbnail)}
             alt=""
             className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
           />

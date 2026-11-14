@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { getSubscribedChannels } from "../../api/subscription.api";
 import EmptyState from "./EmptyState";
 import { SubscribersIcon } from "../Icons";
+import { imgAvatar } from "../../utils/image";
 
 const grid = "grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6";
 
@@ -68,7 +69,7 @@ export default function FollowingTab({ channelId }) {
             style={{ animationDelay: `${Math.min(i, 12) * 40}ms` }}
           >
             <img
-              src={c.avatar}
+              src={imgAvatar(c.avatar)}
               alt={c.username}
               className="h-20 w-20 rounded-full bg-gray-700 object-cover ring-2 ring-white/10 transition group-hover:ring-white/40"
             />

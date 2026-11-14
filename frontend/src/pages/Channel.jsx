@@ -6,6 +6,7 @@ import ChannelTabs from "../components/channel/ChannelTabs.jsx";
 import { formatSubscribers } from "../utils/formatters.js";
 import useAuth from "../hooks/useAuth.js";
 import SpecularButton from "../components/SpecularButton.jsx";
+import { imgAvatar, imgCover } from "../utils/image";
 
 const Channel = () => {
     const { username } = useParams();
@@ -91,7 +92,7 @@ const Channel = () => {
         <div>
             {channel.coverImage ? (
                 <img
-                    src={channel.coverImage}
+                    src={imgCover(channel.coverImage)}
                     alt="Cover"
                     className="h-32 w-full rounded-xl object-cover sm:h-58"
                 />
@@ -102,7 +103,7 @@ const Channel = () => {
             {/* Info row: avatar overlaps the cover with a negative margin, text stays below it */}
             <div className="flex items-start gap-6 px-2 pt-3 sm:px-4">
                 <img
-                    src={channel.avatar}
+                    src={imgAvatar(channel.avatar, 320)}
                     alt={channel.username}
                     className="-mt-10 h-20 w-20 shrink-0 rounded-full border-4 border-black bg-gray-700 object-cover sm:-mt-14 sm:h-36 sm:w-36"
                 />

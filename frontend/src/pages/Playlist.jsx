@@ -21,6 +21,7 @@ import {
   VideoIcon,
 } from "../components/Icons";
 import { formatViews, timeAgo } from "../utils/formatters";
+import { imgAvatar, imgThumb } from "../utils/image";
 
 const formatTotalDuration = (seconds = 0) => {
   const hours = Math.floor(seconds / 3600);
@@ -290,7 +291,7 @@ export default function Playlist() {
           <div
             aria-hidden="true"
             className="absolute inset-0 scale-125 bg-cover bg-center opacity-25 blur-3xl"
-            style={{ backgroundImage: `url(${cover})` }}
+            style={{ backgroundImage: `url(${imgThumb(cover, 200)})` }}
           />
         )}
 
@@ -302,7 +303,7 @@ export default function Playlist() {
               <div className="absolute inset-x-2.5 -top-1 h-full rounded-xl bg-white/20" />
               <div className="relative h-full overflow-hidden rounded-xl bg-[#272727] shadow-xl shadow-black/40">
                 {cover ? (
-                  <img src={cover} alt="" className="h-full w-full object-cover" />
+                  <img src={imgThumb(cover)} alt="" className="h-full w-full object-cover" />
                 ) : (
                   <div className="flex h-full items-center justify-center text-gray-500">
                     <FolderIcon size={36} />
@@ -335,7 +336,7 @@ export default function Playlist() {
                 className="group mt-3 inline-flex w-fit max-w-full items-center gap-2.5 rounded-full outline-none focus-visible:ring-2 focus-visible:ring-purple-400"
               >
                 <img
-                  src={owner.avatar}
+                  src={imgAvatar(owner.avatar)}
                   alt={owner.username}
                   className="h-8 w-8 rounded-full bg-gray-700 object-cover ring-2 ring-white/10 transition group-hover:ring-purple-400/60"
                 />

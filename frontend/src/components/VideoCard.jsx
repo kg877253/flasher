@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { timeAgo, formatDuration, formatViews } from "../utils/formatters";
+import { imgAvatar, imgThumb } from "../utils/image";
 
 export default function VideoCard({ video, index = 0 }) {
   // The thumbnail fades in once it has loaded
@@ -15,7 +16,7 @@ export default function VideoCard({ video, index = 0 }) {
     >
       <div className="relative aspect-video overflow-hidden rounded-xl bg-gray-800 ring-1 ring-white/10 transition duration-300 group-hover:ring-purple-400/50">
         <img
-          src={video.thumbnail}
+          src={imgThumb(video.thumbnail)}
           alt={video.title}
           loading="lazy"
           decoding="async"
@@ -32,7 +33,7 @@ export default function VideoCard({ video, index = 0 }) {
 
       <div className="mt-3 flex gap-3">
         <img
-          src={video.owner?.avatar}
+          src={imgAvatar(video.owner?.avatar)}
           alt={video.owner?.username}
           className="h-9 w-9 shrink-0 rounded-full bg-gray-700 object-cover"
         />

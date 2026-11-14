@@ -5,6 +5,7 @@ import Logo from "./Logo";
 import NavSearch from "./NavSearch";
 import Dropdown, { DropdownItem, DropdownSeparator } from "./Dropdown";
 import { ChevronDownIcon, LogoutIcon, MenuIcon, SettingsIcon, UserIcon } from "./Icons";
+import { imgAvatar } from "../utils/image";
 
 export default function Navbar({ onMenuClick }) {
   const { user, loading, logout } = useAuth();
@@ -46,7 +47,7 @@ export default function Navbar({ onMenuClick }) {
             trigger={
               <>
                 <img
-                  src={user.avatar}
+                  src={imgAvatar(user.avatar)}
                   alt={user.username}
                   className="h-9 w-9 rounded-full bg-gray-700 object-cover"
                 />

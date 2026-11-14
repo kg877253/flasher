@@ -10,6 +10,7 @@ import {
 import { timeAgo } from "../../utils/formatters";
 import EmptyState from "./EmptyState";
 import { LikeIcon, PencilIcon, TrashIcon, UserIcon } from "../Icons";
+import { imgAvatar } from "../../utils/image";
 
 const MAX_LENGTH = 80;
 
@@ -165,7 +166,7 @@ export default function TweetsTab({ channel }) {
               style={{ animationDelay: `${Math.min(index, 8) * 40}ms` }}
             >
               <div className="flex items-center gap-3">
-                <img src={channel.avatar} alt={channel.username} className="h-9 w-9 shrink-0 rounded-full bg-gray-700 object-cover" />
+                <img src={imgAvatar(channel.avatar)} alt={channel.username} className="h-9 w-9 shrink-0 rounded-full bg-gray-700 object-cover" />
                 <div className="min-w-0 flex-1 text-sm">
                   <p className="font-medium">{channel.fullname}</p>
                   <p className="text-gray-400">@{channel.username} • {timeAgo(tweet.createdAt)}</p>

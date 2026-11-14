@@ -8,6 +8,7 @@ import SearchInput from "../components/SearchInput";
 import SegmentedControl from "../components/SegmentedControl";
 import EmptyState from "../components/channel/EmptyState";
 import { timeAgo } from "../utils/formatters";
+import { imgAvatar } from "../utils/image";
 
 const SORTS = [
   { id: "newest", label: "Newest" },
@@ -169,7 +170,7 @@ export default function Subscribers() {
                   style={{ animationDelay: `${Math.min(index, 10) * 40}ms` }}
                 >
                   <img
-                    src={person.avatar}
+                    src={imgAvatar(person.avatar)}
                     alt={person.username}
                     className="h-14 w-14 shrink-0 rounded-full bg-gray-700 object-cover ring-2 ring-white/10 transition duration-300 group-hover:ring-purple-400/60"
                   />

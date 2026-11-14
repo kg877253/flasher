@@ -7,6 +7,7 @@ import VideoCardSkeleton from "../components/VideoCardSkeleton";
 import SegmentedControl from "../components/SegmentedControl";
 import EmptyState from "../components/channel/EmptyState";
 import { SearchIcon, VideoIcon } from "../components/Icons";
+import { imgAvatar } from "../utils/image";
 
 const LIMIT = 12;
 
@@ -200,7 +201,7 @@ function ChannelResults({ channels, query }) {
             className="group flex min-h-24 items-center gap-4 rounded-xl border border-white/10 bg-black/20 p-4 outline-none transition duration-300 hover:-translate-y-0.5 hover:border-purple-400/50 hover:bg-white/[0.07] hover:shadow-lg hover:shadow-purple-950/20 focus-visible:ring-2 focus-visible:ring-purple-400"
           >
             <img
-              src={channel.avatar}
+              src={imgAvatar(channel.avatar)}
               alt={channel.username}
               className="h-14 w-14 shrink-0 rounded-full bg-gray-700 object-cover ring-2 ring-white/10 transition group-hover:ring-purple-400/60"
             />

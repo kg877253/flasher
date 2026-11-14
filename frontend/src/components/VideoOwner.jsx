@@ -4,6 +4,7 @@ import useAuth from "../hooks/useAuth";
 import { getUserChannelProfile } from "../api/user.api";
 import { toggleSubscription } from "../api/subscription.api";
 import { formatSubscribers } from "../utils/formatters";
+import { imgAvatar } from "../utils/image";
 
 export default function VideoOwner({ owner }) {
   const { user } = useAuth();
@@ -55,7 +56,7 @@ export default function VideoOwner({ owner }) {
           className="flex min-w-0 items-center gap-3 rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-purple-400"
         >
           <img
-            src={owner.avatar}
+            src={imgAvatar(owner.avatar)}
             alt={owner.username}
             className="h-10 w-10 shrink-0 rounded-full bg-gray-700 object-cover"
           />

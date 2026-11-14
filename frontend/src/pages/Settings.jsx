@@ -8,6 +8,7 @@ import {
 } from "../api/user.api";
 import { CheckIcon, SettingsIcon, UploadIcon } from "../components/Icons";
 import PageHeader from "../components/PageHeader";
+import { imgAvatar, imgCover } from "../utils/image";
 
 const inputClass =
   "mt-1 w-full rounded-xl border border-white/10 bg-white/5 px-3.5 py-2.5 text-sm outline-none transition focus:border-purple-400/60 focus:bg-white/10";
@@ -144,7 +145,7 @@ export default function Settings() {
           <div className="overflow-hidden rounded-xl border border-white/10 bg-black">
             <div className="relative h-32 sm:h-44">
               {user?.coverImage ? (
-                <img src={user.coverImage} alt="" className="h-full w-full object-cover" />
+                <img src={imgCover(user.coverImage, 1200)} alt="" className="h-full w-full object-cover" />
               ) : (
                 <div className="h-full w-full bg-gradient-to-r from-white/10 to-white/[0.04]" />
               )}
@@ -152,7 +153,7 @@ export default function Settings() {
             <div className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex min-w-0 items-center gap-4 z-10">
                 <img
-                  src={user?.avatar}
+                  src={imgAvatar(user?.avatar, 192)}
                   alt={user?.username}
                   className="-mt-10 h-16 w-16 shrink-0 rounded-full border-4 border-black bg-gray-700 object-cover sm:-mt-12 sm:h-20 sm:w-20"
                 />
