@@ -1,9 +1,12 @@
 import { Link } from "react-router-dom";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 import Logo, { LogoMark } from "../Logo";
 import { ArrowLeftIcon } from "../Icons";
 
+const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+
 export default function AuthLayout({ children }) {
-  return (
+  const page = (
     <div className="grid min-h-screen bg-black text-white lg:grid-cols-[1.1fr_1fr]">
       {/* Brand side, desktop only */}
       <aside className="relative hidden overflow-hidden border-r border-white/10 bg-[#0a0a0a] p-12 lg:flex lg:flex-col lg:justify-between">
@@ -44,5 +47,13 @@ export default function AuthLayout({ children }) {
         <div className="m-auto w-full max-w-sm py-8">{children}</div>
       </main>
     </div>
+  );
+
+  // The Google script is loaded only on the login and sign up pages.
+  // Without a client id we skip it (GoogleButton hides itself in that case too).
+  return GOOGLE_CLIENT_ID ? (
+    <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>{page}</GoogleOAuthProvider>
+  ) : (
+    page
   );
 }
