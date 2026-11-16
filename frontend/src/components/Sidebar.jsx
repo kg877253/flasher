@@ -35,7 +35,7 @@ const topGroups = [
 const bottomGroups = [
   {
     links: [
-      { label: "Support", to: "/support", icon: SupportIcon },
+      { label: "Support & Contact", to: "/support", icon: SupportIcon },
       { label: "Settings", to: "/settings", icon: SettingsIcon },
     ],
   },

@@ -1,4 +1,4 @@
-import { ChevronDownIcon, SupportIcon } from "../components/Icons";
+import { ChevronDownIcon, GithubIcon, SupportIcon } from "../components/Icons";
 import PageHeader from "../components/PageHeader";
 
 const FAQS = [
@@ -51,8 +51,17 @@ export default function Support() {
             Send us the page link and what went wrong. We will take a look.
           </p>
           <a
+            href="https://github.com/kg877253/flasher"
+            target="_blank"
+            rel="noreferrer"
+            className="mt-4 inline-flex items-center gap-2 rounded-full border border-white/15 px-5 py-2.5 text-sm font-semibold transition hover:border-white/30 hover:bg-white/10 active:scale-95"
+          >
+            <GithubIcon size={16} />
+            GitHub
+          </a>
+          <a
             href="mailto:kg877253@gmail.com?subject=Flasher%20support"
-            className="mt-4 inline-flex rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-black transition hover:bg-gray-200 active:scale-95"
+            className="ml-2 mt-4 inline-flex rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-black transition hover:bg-gray-200 active:scale-95"
           >
             Email support
           </a>
