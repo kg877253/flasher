@@ -33,7 +33,6 @@ const router = createBrowserRouter([
       // Public
       { index: true, element: <Home /> },
       { path: "users/channel/:username", element: <Channel /> },
-
       { path: "support", element: <Support /> },
       
       // Only for logged-in users
